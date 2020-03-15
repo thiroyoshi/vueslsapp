@@ -1,0 +1,37 @@
+Resources:
+  usersTable: 
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${opt:stage, self:provider.stage}-${self:service.name}-users
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+        - AttributeName: cognito_user_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        - IndexName: cognito_user_id
+          KeySchema:
+              - AttributeName: cognito_user_id
+                KeyType: HASH
+          Projection:
+              ProjectionType: ALL
+          ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        - IndexName: email
+          KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+          Projection:
+              ProjectionType: ALL
+          ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1

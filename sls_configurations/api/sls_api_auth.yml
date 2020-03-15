@@ -1,0 +1,5 @@
+authorizerFunc:
+  handler: functions/authorizer/authorizer.lambda_handler
+  environment:
+    CLIENT_ID: ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cognito.yml):CLIENT_ID}
+    USER_POOL_ID: ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cognito.yml):USER_POOL_ID}

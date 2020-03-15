@@ -1,0 +1,21 @@
+Resources:
+  messageTable: 
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${opt:stage, self:provider.stage}-${self:service.name}-messages
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: message_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+        - AttributeName: message_id
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TimeToLiveSpecification:
+        AttributeName: expired_at
+        Enabled: true

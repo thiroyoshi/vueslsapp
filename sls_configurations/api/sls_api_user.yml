@@ -1,0 +1,39 @@
+getUsers:
+  handler: functions/api/users/get_users.lambda_handler
+  events:
+    - http:
+        path: users
+        method: get
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+postUsers:
+  handler: functions/api/users/post_users.lambda_handler
+  events:
+    - http:
+        path: users
+        method: post
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+putUsers:
+  handler: functions/api/users/put_users.lambda_handler
+  events:
+    - http:
+        path: users
+        method: put
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+deleteUsers:
+  handler: functions/api/users/delete_users.lambda_handler
+  events:
+    - http:
+        path: users
+        method: delete
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc

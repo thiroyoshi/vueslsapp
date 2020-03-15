@@ -1,0 +1,67 @@
+org: <YOUR ORG NAME>
+app: vueslsapp
+service: vueslsapp
+
+provider:
+  name: aws
+  stage: dev
+  runtime: python3.7
+  region: <YOUR AWS REGION>
+  role: arn:aws:iam::${file(sls_configurations/config/common.yml):ACCOUNT_ID}:role/${opt:stage, self:provider.stage}-${self:service.name}-lambda-role
+  versionFunctions: false
+  tracing:
+    apiGateway: true
+    lambda: true
+  environment:
+    env: ${self:provider.stage}
+    region: ${self:provider.region}
+    project: ${self:service.name}
+  tags:
+    PROJECT: ${self:service.name}
+
+package:
+  exclude:
+    - set_env.bat
+    - set_env.bat.example
+    - node_modules/**
+    - public/**
+    - src/**
+    - dist/**
+    - babel.config.js
+    - package-lock.json
+    - package.json
+    - vue.config.js
+    - .env.*
+    - README.md
+    - requirements.*
+    - .gitignore
+
+plugins:
+  - serverless-s3-sync
+  - serverless-domain-manager
+
+custom:
+  domain: ${file(sls_configurations/config/common.yml):DOMAIN}
+  siteName: ${opt:stage, self:provider.stage}-${self:service.name}.${self:custom.domain}
+  aliasHostedZoneId: ${file(sls_configurations/config/common.yml):ALIAS_HOSTED_ZONEID}
+  aliasDNSName: ${file(sls_configurations/config/common.yml):ALIAS_DNS_NAME}
+  s3Sync:
+    - bucketName: ${self:custom.siteName}
+      localDir: dist
+  customDomain:
+    domainName: ${opt:stage, self:provider.stage}-api-${self:service.name}.${self:custom.domain}
+    stage: ${opt:stage, self:provider.stage}
+    certificateName: "*.${file(sls_configurations/config/common.yml):DOMAIN}"
+    createRoute53Record: true
+  
+functions:
+  - ${file(./sls_configurations/api/sls_api_auth.yml)}
+  - ${file(./sls_configurations/api/sls_api_user.yml)}
+  - ${file(./sls_configurations/api/sls_api_message.yml)}
+
+resources:
+  - ${file(./sls_configurations/sls_web.yml)}
+  - ${file(./sls_configurations/dynamo/sls_dynamo_user.yml)}
+  - ${file(./sls_configurations/dynamo/sls_dynamo_message.yml)}
+
+

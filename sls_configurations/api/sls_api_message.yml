@@ -1,0 +1,39 @@
+getMessages:
+  handler: functions/api/messages/get_messages.lambda_handler
+  events:
+    - http:
+        path: messages
+        method: get
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+postMessages:
+  handler: functions/api/messages/post_messages.lambda_handler
+  events:
+    - http:
+        path: messages
+        method: post
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+putMessages:
+  handler: functions/api/messages/put_messages.lambda_handler
+  events:
+    - http:
+        path: messages
+        method: put
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
+
+deleteMessages:
+  handler: functions/api/messages/delete_messages.lambda_handler
+  events:
+    - http:
+        path: messages
+        method: delete
+        cors:
+          - ${file(sls_configurations/config/${opt:stage, self:provider.stage}/cors.yml)}
+        authorizer: authorizerFunc
