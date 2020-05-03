@@ -1,0 +1,69 @@
+name: VueSlsApp dev CI
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        python-version: [3.7]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: python install and test
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-tools
+        pip-compile requirements.in
+        pip install -r requirements.txt -t pylibs
+      env:
+        CI: true
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm ci
+        npm run lint
+        npm run build-prod --if-present
+        npm test
+      env:
+        CI: true
+    - name: Deploy artifacts
+      run: |
+        npm install -g serverless
+        serverless deploy --stage prod
+      env:
+        AWS_DEFAULT_REGION: ap-northeast-1
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+    - name: Setup AWS CLI
+      uses: chrislennon/action-aws-cli@v1.1
+    - name: Remove Cache
+      run: |
+        json=`aws cloudfront list-distributions --query DistributionList.Items[]`
+        Id=`echo $json | jq -r '.[] | select(.Comment=="vueslsapp") | .Id'`
+        if [ -n "$Id" ] ;then aws cloudfront create-invalidation --distribution-id $Id --paths "/*";else echo "Not found the Distribution."; fi
+      env:
+        AWS_DEFAULT_REGION: ap-northeast-1
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - uses: actions/upload-artifact@v1
+      with:
+        name: vueapp
+        path: dist
