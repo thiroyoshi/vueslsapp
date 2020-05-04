@@ -9,24 +9,24 @@
 </template>
 
 <script>
-import GlobalHeader from "./components/commons/global-header";
-import GlobalFooter from "./components/commons/global-footer";
+import GlobalHeader from './components/commons/global-header'
+import GlobalFooter from './components/commons/global-footer'
 
 export default {
-  name: "App",
+  name: 'App',
 
   components: {
     GlobalHeader,
-    GlobalFooter,
+    GlobalFooter
   },
 
   data: () => ({
-    title: "Vue + Serverless App"
+    title: 'Vue + Serverless App'
   }),
-  created: function() {
-    this.$store.commit("setIsAuth");
+  created: function () {
+    this.$store.commit('setIsAuth')
   }
-};
+}
 </script>
 
 <style scoped>

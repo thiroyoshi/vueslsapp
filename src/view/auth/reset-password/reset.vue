@@ -1,26 +1,32 @@
 <template>
-    <div id="reset-content">
-        <v-layout justify-center>
-            <Reset />
-        </v-layout>
-        <v-layout justify-center>
-            <router-link to="/">
-                <v-btn text small id="back-btn">
-                    <v-icon id="back-icon">fa-arrow-left</v-icon>back to home
-                </v-btn>
-            </router-link>
-        </v-layout>
-    </div>
+  <div id="reset-content">
+    <v-layout justify-center>
+      <Reset />
+    </v-layout>
+    <v-layout justify-center>
+      <router-link to="/">
+        <v-btn
+          id="back-btn"
+          text
+          small
+        >
+          <v-icon id="back-icon">
+            fa-arrow-left
+          </v-icon>back to home
+        </v-btn>
+      </router-link>
+    </v-layout>
+  </div>
 </template>
 
 <script>
-import Reset from "../../../components/auth/reset";
+import Reset from '../../../components/auth/reset'
 
 export default {
-    name: 'ResetView',
-    components: {
-        Reset,
-    }
+  name: 'ResetView',
+  components: {
+    Reset
+  }
 }
 </script>
 
@@ -33,6 +39,6 @@ a {
     font-size: 10px;
 }
 #back-btn {
-    margin-top: 10px;   
+    margin-top: 10px;
 }
 </style>

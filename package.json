@@ -17,6 +17,7 @@
     "aws-sdk": "^2.615.0",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "eslint-config-vue": "^2.0.2",
     "serverless-s3-sync": "^1.10.2",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",

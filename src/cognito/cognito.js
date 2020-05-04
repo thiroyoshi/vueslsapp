@@ -1,11 +1,11 @@
 import { Config, CognitoIdentityCredentials } from 'aws-sdk'
 import {
-    CognitoUserPool,
-    CognitoUser,
-    AuthenticationDetails,
-    CognitoUserAttribute
-  } from 'amazon-cognito-identity-js'
-  
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails,
+  CognitoUserAttribute
+} from 'amazon-cognito-identity-js'
+
 export default class Cognito {
   configure (config) {
     if (config.userPool) {
@@ -23,7 +23,7 @@ export default class Cognito {
     this.options = config
   }
 
-  static install = (Vue, options) => {
+  static install (Vue, options) {
     Object.defineProperty(Vue.prototype, '$cognito', {
       get () { return this.$root._cognito }
     })
@@ -99,9 +99,9 @@ export default class Cognito {
   }
 
   changePassword (oldPassword, newPassword) {
-    var cognitoUser = this.userPool.getCurrentUser();
+    var cognitoUser = this.userPool.getCurrentUser()
     return new Promise((resolve, reject) => {
-      cognitoUser.getSession(function(err, result) {
+      cognitoUser.getSession(function (err, result) {
         if (result) {
           cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
             if (err) {
@@ -110,19 +110,18 @@ export default class Cognito {
               resolve(result)
             }
           })
-        }
-        else {
+        } else {
           reject(err)
         }
       })
-    });
+    })
   }
 
   forgotPassword (username) {
     const userData = { Username: username, Pool: this.userPool }
     const cognitoUser = new CognitoUser(userData)
     return new Promise((resolve, reject) => {
-        cognitoUser.forgotPassword({
+      cognitoUser.forgotPassword({
         onSuccess: (result) => {
           resolve(result)
         },
@@ -137,7 +136,7 @@ export default class Cognito {
     const userData = { Username: username, Pool: this.userPool }
     const cognitoUser = new CognitoUser(userData)
     return new Promise((resolve, reject) => {
-        cognitoUser.confirmPassword(confirmationCode, newPassword, {
+      cognitoUser.confirmPassword(confirmationCode, newPassword, {
         onSuccess: (result) => {
           resolve(result)
         },
@@ -149,9 +148,9 @@ export default class Cognito {
   }
 
   delete () {
-    var cognitoUser = this.userPool.getCurrentUser();
+    var cognitoUser = this.userPool.getCurrentUser()
     return new Promise((resolve, reject) => {
-      cognitoUser.getSession(function(err, result) {
+      cognitoUser.getSession(function (err, result) {
         if (result) {
           cognitoUser.deleteUser((err, result) => {
             if (err) {
@@ -160,12 +159,11 @@ export default class Cognito {
               resolve(result)
             }
           })
-        }
-        else {
+        } else {
           reject(err)
         }
       })
-    });
+    })
   }
 
   /*

@@ -1,6 +1,5 @@
 <template>
   <div id="reset-content">
-    
     <v-card class="reset mx-auto">
       <v-list-item>
         <v-list-item-content>
@@ -8,64 +7,91 @@
           <v-list-item-subtitle>Input verification code and new password</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-form ref="ResetForm" id="input-form">
+      <v-form
+        id="input-form"
+        ref="ResetForm"
+      >
         <v-text-field
-          :rules="[rules.required]"
           v-model="email"
+          :rules="[rules.required]"
           label="Email"
           readonly
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.equal]"
           v-model="verificationCode"
+          :rules="[rules.required, rules.equal]"
           label="Verification Code"
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.min]"
           v-model="password"
+          :rules="[rules.required, rules.min]"
           label="Password"
           type="password"
           autocomplete="new-password"
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.min]"
           v-model="passwordConfirm"
+          :rules="[rules.required, rules.min]"
           label="Password(Confirm)"
           type="password"
           autocomplete="new-password"
           required
-        ></v-text-field>
+        />
         <v-layout justify-center>
-          <v-btn class="primary" @click="resetPassword">Reset Password</v-btn>
+          <v-btn
+            class="primary"
+            @click="resetPassword"
+          >
+            Reset Password
+          </v-btn>
         </v-layout>
       </v-form>
     </v-card>
 
-    <v-dialog v-model="successDialog" persistent max-width="500">
+    <v-dialog
+      v-model="successDialog"
+      persistent
+      max-width="500"
+    >
       <v-card class="mx-auto">
         <v-card-title>Verification Success!</v-card-title>
         <v-card-text>Now you got new password! Click Ok to go to the login view</v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="goToLoginView">OK</v-btn>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            text
+            @click="goToLoginView"
+          >
+            OK
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="errorDialog" persistent max-width="500">
+    <v-dialog
+      v-model="errorDialog"
+      persistent
+      max-width="500"
+    >
       <v-card class="mx-auto">
         <v-card-title>Reset Password Failed</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="errorDialog = false">OK</v-btn>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            text
+            @click="errorDialog = false"
+          >
+            OK
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
   </div>
 </template>
 
@@ -77,7 +103,7 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         min: v => v.length >= 8 || 'Min 8 characters',
-        equal: v => v.length == 6 || 'Equals 6 characters'
+        equal: v => v.length === 6 || 'Equals 6 characters'
       },
       email: '',
       verificationCode: '',
@@ -85,10 +111,10 @@ export default {
       passwordConfirm: '',
       successDialog: false,
       errorDialog: false,
-      errorMessage: "",
+      errorMessage: ''
     }
   },
-  created: function(){
+  created: function () {
     this.email = this.$store.getters.forgotEmail
   },
   methods: {
@@ -96,7 +122,7 @@ export default {
       if (this.$refs.ResetForm.validate()) {
         this.$cognito.confirmForgotPassword(this.email, this.verificationCode, this.password)
           .then(result => { // eslint-disable-line
-            this.$store.commit("clearSignupEmail");
+            this.$store.commit('clearSignupEmail')
             this.successDialog = true
           })
           .catch(err => {
@@ -107,7 +133,7 @@ export default {
     },
     goToLoginView () {
       this.successDialog = false
-      this.$router.replace('/login') 
+      this.$router.replace('/login')
     }
   }
 }

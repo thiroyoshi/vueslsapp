@@ -1,6 +1,5 @@
 <template>
   <div id="signup-content">
-    
     <v-card class="signup mx-auto">
       <v-list-item>
         <v-list-item-content>
@@ -8,46 +7,63 @@
           <v-list-item-subtitle>Input your email and password to sign up</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-form ref="signupForm" id="input-form">
+      <v-form
+        id="input-form"
+        ref="signupForm"
+      >
         <v-text-field
-          :rules="[rules.required]"
           v-model="email"
+          :rules="[rules.required]"
           label="Email"
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.min]"
           v-model="password"
+          :rules="[rules.required, rules.min]"
           label="Password"
           type="password"
           autocomplete="new-password"
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.min]"
           v-model="passwordConfirm"
+          :rules="[rules.required, rules.min]"
           label="Password(Confirm)"
           type="password"
           autocomplete="new-password"
           required
-        ></v-text-field>
+        />
         <v-layout justify-center>
-          <v-btn class="primary" @click="singup">Sign Up</v-btn>
+          <v-btn
+            class="primary"
+            @click="singup"
+          >
+            Sign Up
+          </v-btn>
         </v-layout>
       </v-form>
     </v-card>
 
-    <v-dialog v-model="dialog" persistent max-width="500">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="500"
+    >
       <v-card class="mx-auto">
         <v-card-title>Sign up Failed</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialog = false">OK</v-btn>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            OK
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
   </div>
 </template>
 
@@ -58,13 +74,13 @@ export default {
     return {
       rules: {
         required: value => !!value || 'Required.',
-        min: v => v.length >= 8 || 'Min 8 characters',
+        min: v => v.length >= 8 || 'Min 8 characters'
       },
       email: '',
       password: '',
       passwordConfirm: '',
       dialog: false,
-      errorMessage: "",
+      errorMessage: ''
     }
   },
   methods: {
@@ -73,7 +89,7 @@ export default {
         if (this.email && (this.password === this.passwordConfirm)) {
           this.$cognito.signUp(this.email, this.password)
             .then(result => { // eslint-disable-line
-              this.$store.commit("setSignupEmail", this.email);
+              this.$store.commit('setSignupEmail', this.email)
               this.$router.replace('/confirm')
             })
             .catch(err => {

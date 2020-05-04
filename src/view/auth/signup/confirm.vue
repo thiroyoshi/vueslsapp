@@ -1,12 +1,18 @@
 <template>
   <div id="confirm-content">
     <v-layout justify-center>
-        <Confirm />
+      <Confirm />
     </v-layout>
     <v-layout justify-center>
       <router-link to="/">
-        <v-btn text small id="back-btn">
-          <v-icon id="back-icon">fa-arrow-left</v-icon>back to home
+        <v-btn
+          id="back-btn"
+          text
+          small
+        >
+          <v-icon id="back-icon">
+            fa-arrow-left
+          </v-icon>back to home
         </v-btn>
       </router-link>
     </v-layout>
@@ -14,14 +20,14 @@
 </template>
 
 <script>
-import Confirm from "../../../components/auth/confirm";
+import Confirm from '../../../components/auth/confirm'
 
 export default {
-  name: "ConfirmView",
+  name: 'ConfirmView',
   components: {
     Confirm
   }
-};
+}
 </script>
 
 <style scoped>

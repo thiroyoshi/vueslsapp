@@ -1,13 +1,17 @@
 <template>
-  <v-app-bar app color="rgba（255、0、0、0.5）" dark>
+  <v-app-bar
+    app
+    color="rgba（255、0、0、0.5）"
+    dark
+  >
     <v-toolbar-title
       id="title"
       @click="clickTitle"
     >
-      {{ this.title }}
+      {{ title }}
     </v-toolbar-title>
-    
-    <v-spacer></v-spacer>
+
+    <v-spacer />
 
     <template v-if="this.$store.getters.isAuth">
       <v-menu offset-y>
@@ -21,24 +25,27 @@
           </v-btn>
         </template>
         <v-list>
-            <v-list-item @click="goToSettings">
-                <v-icon :style="{marginRight: '10px'}">fa-user-cog</v-icon>
-                <span>Settings</span>
-            </v-list-item>
-            <v-list-item @click="logout">
-                <v-icon :style="{marginRight: '10px'}">fa-sign-out-alt</v-icon>
-                <span>Logout</span>
-            </v-list-item>
+          <v-list-item @click="goToSettings">
+            <v-icon :style="{marginRight: '10px'}">
+              fa-user-cog
+            </v-icon>
+            <span>Settings</span>
+          </v-list-item>
+          <v-list-item @click="logout">
+            <v-icon :style="{marginRight: '10px'}">
+              fa-sign-out-alt
+            </v-icon>
+            <span>Logout</span>
+          </v-list-item>
         </v-list>
       </v-menu>
     </template>
-
   </v-app-bar>
 </template>
 
 <script>
 export default {
-  name: "global-header",
+  name: 'GlobalHeader',
   props: {
     title: {
       type: String,
@@ -46,28 +53,26 @@ export default {
     }
   },
   methods: {
-    clickTitle: function(){
-      if(this.$route.path == "/")
-        return
+    clickTitle: function () {
+      if (this.$route.path === '/') { return }
 
-      if(this.$store.getters.isAuth){
+      if (this.$store.getters.isAuth) {
         this.$router.replace('/home')
-      }
-      else{
+      } else {
         this.$router.replace('/')
       }
     },
-    goToSettings: function(){
-        this.$router.replace('/settings')
+    goToSettings: function () {
+      this.$router.replace('/settings')
     },
-    logout: function(){
-        this.$cognito.logout()
-        localStorage.clear();
-        this.$store.commit("setIsAuth");
-        this.$router.replace('/login')
-    },
+    logout: function () {
+      this.$cognito.logout()
+      localStorage.clear()
+      this.$store.commit('setIsAuth')
+      this.$router.replace('/login')
+    }
   }
-};
+}
 </script>
 
 <style scoped>

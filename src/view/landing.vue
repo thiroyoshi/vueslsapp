@@ -1,26 +1,44 @@
 <template>
-    <div id="content">
-        <v-container fluid id="banner">
-            <v-layout justify-center>
-                <h3>This is Vue + Serverless Framework App</h3>
-            </v-layout>
-        </v-container>
-        <v-container>
-            <v-row class="mb-6" justify="center" no-gutters>
-                <div class="pa-3">
-                    <v-btn class="pa-3" color="primary" href="/login">Login</v-btn>
-                </div>
-                <div class="pa-3">
-                  <v-btn color="primary" href="/agreement">Signup</v-btn>
-                </div>
-            </v-row>
-        </v-container>
-    </div>
+  <div id="content">
+    <v-container
+      id="banner"
+      fluid
+    >
+      <v-layout justify-center>
+        <h3>This is Vue + Serverless Framework App</h3>
+      </v-layout>
+    </v-container>
+    <v-container>
+      <v-row
+        class="mb-6"
+        justify="center"
+        no-gutters
+      >
+        <div class="pa-3">
+          <v-btn
+            class="pa-3"
+            color="primary"
+            href="/login"
+          >
+            Login
+          </v-btn>
+        </div>
+        <div class="pa-3">
+          <v-btn
+            color="primary"
+            href="/agreement"
+          >
+            Signup
+          </v-btn>
+        </div>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'LandingPage'
+  name: 'LandingPage'
 }
 </script>
 

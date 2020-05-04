@@ -11,47 +11,74 @@
           <v-list-item-subtitle>Input your email and verification code you got from email</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-form ref="confirmForm" id="input-form">
+      <v-form
+        id="input-form"
+        ref="confirmForm"
+      >
         <v-text-field
           v-model="email"
           label="Email"
           readonly
           required
-        ></v-text-field>
+        />
         <v-text-field
-          :rules="[rules.required, rules.equal]"
           v-model="verificationCode"
+          :rules="[rules.required, rules.equal]"
           label="Verification Code"
           required
-        ></v-text-field>
+        />
         <v-layout justify-center>
-          <v-btn class="primary" @click="confirm">Confirm</v-btn>
+          <v-btn
+            class="primary"
+            @click="confirm"
+          >
+            Confirm
+          </v-btn>
         </v-layout>
       </v-form>
     </v-card>
 
-    <v-dialog v-model="successDialog" persistent max-width="500">
+    <v-dialog
+      v-model="successDialog"
+      persistent
+      max-width="500"
+    >
       <v-card class="mx-auto">
         <v-card-title>Verification Success!</v-card-title>
         <v-card-text>Now you can login! Click Ok to go to the login view</v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="goToLoginView">OK</v-btn>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            text
+            @click="goToLoginView"
+          >
+            OK
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="errorDialog" persistent max-width="500">
+    <v-dialog
+      v-model="errorDialog"
+      persistent
+      max-width="500"
+    >
       <v-card class="mx-auto">
         <v-card-title>Verification Failed</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="errorDialog = false">OK</v-btn>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            text
+            @click="errorDialog = false"
+          >
+            OK
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
   </div>
 </template>
 
@@ -61,17 +88,17 @@ export default {
   data () {
     return {
       rules: {
-          required: value => !!value || 'Required.',
-          equal: v => v.length == 6 || 'Equals 6 characters'
+        required: value => !!value || 'Required.',
+        equal: v => v.length === 6 || 'Equals 6 characters'
       },
       email: '',
       verificationCode: '',
       successDialog: false,
       errorDialog: false,
-      errorMessage: "",
+      errorMessage: ''
     }
   },
-  created: function(){
+  created: function () {
     this.email = this.$store.getters.signupEmail
   },
   methods: {
@@ -87,9 +114,9 @@ export default {
           })
       }
     },
-    goToLoginView (){
+    goToLoginView () {
       this.successDialog = false
-      this.$router.replace('/login') 
+      this.$router.replace('/login')
     }
   }
 }
