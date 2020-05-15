@@ -8,23 +8,22 @@ export default new Vuex.Store({
     isAuth: '',
     isRegistered: false,
     signupEmail: '',
-    forgotEmail: ''
+    forgotEmail: '',
+    isApiLoading: false
   },
   getters: {
     isAuth: state => state.isAuth,
     isRegistered: state => state.isRegistered,
     signupEmail: state => state.signupEmail,
-    forgotEmail: state => state.forgotEmail
+    forgotEmail: state => state.forgotEmail,
+    isApiLoading: state => state.isApiLoading
   },
   mutations: {
     setIsAuth: (state) => {
       state.isAuth = localStorage.hasOwnProperty('idToken')
     },
-    setIsRegistered: (state) => {
-      state.isRegistered = true
-    },
-    clearIsRegistered: (state) => {
-      state.isRegistered = false
+    setIsRegistered: (state, param) => {
+      state.isRegistered = param
     },
     setSignupEmail: (state, email) => {
       state.signupEmail = email
@@ -37,6 +36,9 @@ export default new Vuex.Store({
     },
     clearForgotEmail: (state) => {
       state.forgotEmail = ''
+    },
+    setIsApiLoading: (state, param) => {
+      state.isApiLoading = param
     }
   },
   actions: {},

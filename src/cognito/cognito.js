@@ -23,7 +23,7 @@ export default class Cognito {
     this.options = config
   }
 
-  static install (Vue, options) {
+  static install = (Vue, options) => {
     Object.defineProperty(Vue.prototype, '$cognito', {
       get () { return this.$root._cognito }
     })

@@ -18,7 +18,7 @@
             v-model="profile.username"
             :rules="[rules.required, rules.max]"
             label="Username"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             counter
             required
           />
@@ -26,12 +26,12 @@
             v-model="profile.email"
             :rules="[rules.required]"
             label="E-mail"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             required
           />
           <v-btn
             color="primary"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             @click="updateProfile"
           >
             Update
@@ -53,7 +53,7 @@
           <v-text-field
             v-model="oldPassword"
             :rules="[rules.required, rules.min]"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             label="Old Password"
             type="password"
             autocomplete="current-password"
@@ -62,7 +62,7 @@
           <v-text-field
             v-model="password"
             :rules="[rules.required, rules.min]"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             label="New Password"
             type="password"
             autocomplete="new-password"
@@ -70,7 +70,7 @@
           />
           <v-text-field
             v-model="passwordConfirm"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             :rules="[rules.required, rules.min]"
             label="New Password(Confirm)"
             type="password"
@@ -79,7 +79,7 @@
           />
           <v-btn
             color="primary"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             @click="updatePassword"
           >
             Update
@@ -106,7 +106,7 @@
           </v-alert>
           <v-btn
             id="delete-btn"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             @click="deleteDialog = true"
           >
             Delete
@@ -211,6 +211,8 @@
 </template>
 
 <script>
+import API from '../../api'
+
 export default {
   name: 'Settings',
   data: function () {
@@ -232,7 +234,6 @@ export default {
       oldPassword: '',
       password: '',
       passwordConfirm: '',
-      Loading: false,
       passwordDialog: false,
       passwordErrorDialog: false,
       deleteDialog: false,
@@ -279,56 +280,23 @@ export default {
         })
     },
     getUser: function () {
-      var url = process.env.VUE_APP_API_ORIGIN + '/users'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.Loading = true
-      this.axios.get(url, config)
+      API.get('/users', null)
         .then(res => {
-          this.Loading = false
-          this.profile.userId = res.data.data.userId
-          this.profile.username = res.data.data.username
-          this.profile.email = res.data.data.email
+          this.profile.userId = res.data.userId
+          this.profile.username = res.data.username
+          this.profile.email = res.data.email
         })
         .catch(err => {
-          this.Loading = false
           this.errorMessage = err.message
           this.errorDialog = true
         })
     },
     putUser: function () {
-      var url = process.env.VUE_APP_API_ORIGIN + '/users'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.Loading = true
-      this.axios.put(url, this.profile, config)
-            .then(res => {  // eslint-disable-line
-          this.Loading = false
+      API.post('/users', this.profile)
+        .then(res => {
+          console.log(res)
         })
         .catch(err => {
-          this.Loading = false
-          this.errorMessage = err.response.data.message
-          this.errorDialog = true
-        })
-    },
-    deleteUser: function () {
-      var url = process.env.VUE_APP_API_ORIGIN + '/users'
-      var config = {
-        headers: this.apiHeaders,
-        data: this.profile,
-        responseType: 'json'
-      }
-      this.Loading = true
-      this.axios.delete(url, config)
-            .then(res => {  // eslint-disable-line
-          this.Loading = false
-        })
-        .catch(err => {
-          this.Loading = false
           this.errorMessage = err.response.data.message
           this.errorDialog = true
         })

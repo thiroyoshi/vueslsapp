@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import API from '../../api'
+
 export default {
   name: 'Login',
   data () {
@@ -111,27 +113,21 @@ export default {
             localStorage.setItem('userId', result.idToken.payload['cognito:username'])
             this.$store.commit('setIsAuth')
 
-            var url = process.env.VUE_APP_API_ORIGIN + '/users'
-            var config = {
-              headers: {
-                'Authorization': localStorage.idToken,
-                'Content-Type': 'application/json'
-              },
-              responseType: 'json'
-            }
-            this.axios.get(url, config)
+            API.setConfig()
+            API.get('/users', null)
               .then(res => {
-                if (res.data.data.username === res.data.data.cognito_user_id) {
+                console.log(res)
+                if (res.data.username === res.data.cognito_user_id) {
                   this.$store.commit('setSignupEmail', this.email)
-                  this.$store.commit('clearIsRegistered')
+                  this.$store.commit('setIsRegistered', false)
                   this.$router.replace('/register')
                 } else {
-                  this.$store.commit('setIsRegistered')
+                  this.$store.commit('setIsRegistered', true)
                   this.$router.replace('/home')
                 }
               })
-            .catch(err => { // eslint-disable-line
-                this.$store.commit('clearIsRegistered')
+              .catch(err => { // eslint-disable-line
+                this.$store.commit('setIsRegistered', false)
                 this.$router.replace('/register')
               })
           })

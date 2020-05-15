@@ -18,13 +18,13 @@
             v-model="profile.username"
             :rules="[rules.required, rules.max]"
             label="Username"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             counter
             required
           />
           <v-btn
             color="primary"
-            :disabled="Loading"
+            :disabled="this.$store.getters.isApiLoading"
             @click="register"
           >
             Register
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import API from '../../../api'
+
 export default {
   name: 'RegisterView',
   data: function () {
@@ -73,7 +75,6 @@ export default {
         username: '',
         email: ''
       },
-      Loading: false,
       errorMessage: '',
       dialog: false
     }
@@ -88,20 +89,12 @@ export default {
       }
     },
     putUser: function () {
-      var url = process.env.VUE_APP_API_ORIGIN + '/users'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.Loading = true
-      this.axios.put(url, this.profile, config)
-      .then(res => {  // eslint-disable-line
-          this.Loading = false
+      API.put('/users', this.profile)
+        .then(res => {
           this.$store.commit('clearSignupEmail')
           this.$router.replace('/home')
         })
         .catch(err => {
-          this.Loading = false
           this.errorMessage = err.response.data.message
           this.dialog = true
         })

@@ -12,13 +12,13 @@
       <v-form class="input-form">
         <v-btn
           color="primary"
-          :disabled="getAPILoading"
+          :disabled="this.$store.getters.isApiLoading"
           @click="getMessage"
         >
           GET Message
         </v-btn>
         <v-progress-circular
-          v-show="getAPILoading"
+          v-show="this.$store.getters.isApiLoading"
           class="api-loading"
           indeterminate
           size="20"
@@ -55,13 +55,13 @@
         />
         <v-btn
           color="primary"
-          :disabled="postAPILoading"
+          :disabled="this.$store.getters.isApiLoading"
           @click="postMessage"
         >
           POST Message
         </v-btn>
         <v-progress-circular
-          v-show="postAPILoading"
+          v-show="this.$store.getters.isApiLoading"
           class="api-loading"
           indeterminate
           size="20"
@@ -97,19 +97,19 @@
           label="Message"
         />
         <v-text-field
-          v-model="putApiBody.messageId"
+          v-model="putApiBody.message_id"
           counter
           label="Message ID"
         />
         <v-btn
           color="primary"
-          :disabled="putAPILoading"
+          :disabled="this.$store.getters.isApiLoading"
           @click="putMessage"
         >
           PUT Message
         </v-btn>
         <v-progress-circular
-          v-show="putAPILoading"
+          v-show="this.$store.getters.isApiLoading"
           class="api-loading"
           indeterminate
           size="20"
@@ -140,19 +140,19 @@
       <v-divider />
       <v-form class="input-form">
         <v-text-field
-          v-model="deleteApiBody.messageId"
+          v-model="deleteApiBody.message_id"
           counter
           label="Message ID"
         />
         <v-btn
           color="primary"
-          :disabled="deleteAPILoading"
+          :disabled="this.$store.getters.isApiLoading"
           @click="deleteMessage"
         >
           DELETE Message
         </v-btn>
         <v-progress-circular
-          v-show="deleteAPILoading"
+          v-show="this.$store.getters.isApiLoading"
           class="api-loading"
           indeterminate
           size="20"
@@ -195,31 +195,25 @@
 </template>
 
 <script>
+import API from '../../api'
+
 export default {
   name: 'Home',
   data: function () {
     return {
-      apiHeaders: {
-        'Authorization': localStorage.idToken,
-        'Content-Type': 'application/json'
-      },
       getApiResult: '',
-      getAPILoading: false,
       postApiResult: '',
-      postAPILoading: false,
       putApiResult: '',
-      putAPILoading: false,
       deleteApiResult: '',
-      deleteAPILoading: false,
       postApiBody: {
         message: ''
       },
       putApiBody: {
-        messageId: '',
+        message_id: '', // eslint-disable-line
         message: ''
       },
       deleteApiBody: {
-        messageId: ''
+        message_id: '' // eslint-disable-line
       },
       errorMessage: '',
       dialog: false
@@ -227,79 +221,42 @@ export default {
   },
   methods: {
     getMessage: function () {
-      this.getApiResult = ''
-      var url = process.env.VUE_APP_API_ORIGIN + '/messages'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.getAPILoading = true
-      this.axios.get(url, config)
+      API.get('/messages', null)
         .then(res => {
-          this.getAPILoading = false
-          this.getApiResult = JSON.stringify(res.data.messages, null, '\t')
+          this.getApiResult = JSON.stringify(res.messages, null, '\t')
         })
         .catch(err => {
-          this.getAPILoading = false
           this.errorMessage = err.message
           this.dialog = true
         })
     },
     postMessage: function () {
-      this.postApiResult = ''
-      var url = process.env.VUE_APP_API_ORIGIN + '/messages'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.postAPILoading = true
-      this.axios.post(url, this.postApiBody, config)
+      API.post('/messages', this.postApiBody)
         .then(res => {
-          this.postAPILoading = false
-          this.postApiResult = JSON.stringify(res.data.message, null, '\t')
+          this.postApiResult = JSON.stringify(res.message, null, '\t')
         })
         .catch(err => {
-          this.postAPILoading = false
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.message
           this.dialog = true
         })
     },
     putMessage: function () {
-      this.putApiResult = ''
-      var url = process.env.VUE_APP_API_ORIGIN + '/messages'
-      var config = {
-        headers: this.apiHeaders,
-        responseType: 'json'
-      }
-      this.putAPILoading = true
-      this.axios.put(url, this.putApiBody, config)
+      API.put('/messages', this.putApiBody)
         .then(res => {
-          this.putAPILoading = false
-          this.putApiResult = JSON.stringify(res.data.message, null, '\t')
+          this.putApiResult = JSON.stringify(res.message, null, '\t')
         })
         .catch(err => {
-          this.putAPILoading = false
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.message
           this.dialog = true
         })
     },
     deleteMessage: function () {
-      this.deleteApiResult = ''
-      var url = process.env.VUE_APP_API_ORIGIN + '/messages'
-      var config = {
-        headers: this.apiHeaders,
-        data: this.deleteApiBody,
-        responseType: 'json'
-      }
-      this.deleteAPILoading = true
-      this.axios.delete(url, config)
+      API.delete('/messages', this.deleteApiBody)
         .then(res => {
-          this.deleteAPILoading = false
-          this.deleteApiResult = JSON.stringify(res.data.message, null, '\t')
+          this.deleteApiResult = JSON.stringify(res.message, null, '\t')
         })
         .catch(err => {
-          this.deleteAPILoading = false
-          this.errorMessage = err.response.data.message
+          this.errorMessage = err.message
           this.dialog = true
         })
     }
