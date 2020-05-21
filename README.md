@@ -18,8 +18,8 @@ You can build the application that you can ...
 
 - node.js
 - Vue.js
-- python 3.7
 - AWS CLI
+- python 3.7
 - Serverless Framework 1.6 >=
 
 ## Building
