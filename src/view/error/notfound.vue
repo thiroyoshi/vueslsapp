@@ -6,7 +6,7 @@
       </h1>
     </v-layout>
     <v-layout justify-center>
-      <h2>Not Found</h2>
+      <h2>{{ $t("notfound.title") }}</h2>
     </v-layout>
     <v-layout justify-center>
       <router-link to="/">
@@ -17,7 +17,7 @@
         >
           <v-icon id="back-icon">
             fa-arrow-left
-          </v-icon>back to home
+          </v-icon>{{ $t("notfound.toHome") }}
         </v-btn>
       </router-link>
     </v-layout>

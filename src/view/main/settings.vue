@@ -1,12 +1,12 @@
 <template>
   <v-container id="home-content">
-    <h2>Settings</h2>
+    <h2>{{ $t("settings.title") }}</h2>
     <v-divider />
     <v-container>
       <v-card>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Profile</v-list-item-title>
+            <v-list-item-title>{{ $t("settings.profile.title") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
@@ -17,7 +17,7 @@
           <v-text-field
             v-model="profile.username"
             :rules="[rules.required, rules.max]"
-            label="Username"
+            :label="$t('settings.profile.username')"
             :disabled="this.$store.getters.isApiLoading"
             counter
             required
@@ -25,7 +25,7 @@
           <v-text-field
             v-model="profile.email"
             :rules="[rules.required]"
-            label="E-mail"
+            :label="$t('settings.profile.email')"
             :disabled="this.$store.getters.isApiLoading"
             required
           />
@@ -34,7 +34,7 @@
             :disabled="this.$store.getters.isApiLoading"
             @click="updateProfile"
           >
-            Update
+            {{ $t("settings.update") }}
           </v-btn>
         </v-form>
       </v-card>
@@ -42,7 +42,7 @@
       <v-card>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Password</v-list-item-title>
+            <v-list-item-title>{{ $t("settings.password.title") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
@@ -54,7 +54,7 @@
             v-model="oldPassword"
             :rules="[rules.required, rules.min]"
             :disabled="this.$store.getters.isApiLoading"
-            label="Old Password"
+            :label="$t('settings.password.oldPassword')"
             type="password"
             autocomplete="current-password"
             required
@@ -63,7 +63,7 @@
             v-model="password"
             :rules="[rules.required, rules.min]"
             :disabled="this.$store.getters.isApiLoading"
-            label="New Password"
+            :label="$t('settings.password.newPassword')"
             type="password"
             autocomplete="new-password"
             required
@@ -72,7 +72,7 @@
             v-model="passwordConfirm"
             :disabled="this.$store.getters.isApiLoading"
             :rules="[rules.required, rules.min]"
-            label="New Password(Confirm)"
+            :label="$t('settings.password.passwordConfirm')"
             type="password"
             autocomplete="new-password"
             required
@@ -82,7 +82,7 @@
             :disabled="this.$store.getters.isApiLoading"
             @click="updatePassword"
           >
-            Update
+            {{ $t("settings.update") }}
           </v-btn>
         </v-form>
       </v-card>
@@ -91,7 +91,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title id="delete-title">
-              Delete Account
+              {{ $t("settings.deleteAccount.title") }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -102,14 +102,14 @@
             outlined
             type="error"
           >
-            Make sure that you want to delete your <strong>ALL DATA</strong>.
+            {{ $t("settings.deleteAccount.message") }}
           </v-alert>
           <v-btn
             id="delete-btn"
             :disabled="this.$store.getters.isApiLoading"
             @click="deleteDialog = true"
           >
-            Delete
+            {{ $t("settings.deleteAccount.delete") }}
           </v-btn>
         </v-form>
       </v-card>
@@ -122,7 +122,7 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title>Password Changed Successfuly</v-card-title>
+        <v-card-title>{{ $t("settings.passwordDialog.title") }}</v-card-title>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -143,8 +143,8 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Password Validation Failed</v-card-title>
-        <v-card-text>Your new passwords are not match.</v-card-text>
+        <v-card-title>{{ $t("settings.passwordErrorDialog.title") }}</v-card-title>
+        <v-card-text>{{ $t("settings.passwordErrorDialog.text") }}</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -165,8 +165,8 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Are you sure to delete the account?</v-card-title>
-        <v-card-text>All your data will be deleted.</v-card-text>
+        <v-card-title>{{ $t("settings.deleteDialog.title") }}</v-card-title>
+        <v-card-text>{{ $t("settings.deleteDialog.text") }}</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -174,13 +174,13 @@
             text
             @click="deleteDialog = false"
           >
-            Cancel
+            {{ $t("settings.deleteDialog.cancel") }}
           </v-btn>
           <v-btn
             color="error"
             @click="deleteAccount"
           >
-            Delete
+            {{ $t("settings.deleteDialog.delete") }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -193,7 +193,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Settings API Request Failed</v-card-title>
+        <v-card-title>{{ $t("settings.apiErrorDialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -308,7 +308,7 @@ export default {
 <style scoped>
 #home-content {
   margin-top: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 90px;
 }
 #delete-title {
     color:red;

@@ -4,7 +4,10 @@
     <div id="content">
       <router-view />
     </div>
-    <GlobalFooter />
+    <GlobalFooter
+      @change-locale-to-ja="changeLocaleToJa"
+      @change-locale-to-en="changeLocaleToEn"
+    />
   </v-app>
 </template>
 
@@ -25,6 +28,14 @@ export default {
   }),
   created: function () {
     this.$store.commit('setIsAuth')
+  },
+  methods: {
+    changeLocaleToJa: function () {
+      this.$i18n.locale = 'ja'
+    },
+    changeLocaleToEn: function () {
+      this.$i18n.locale = 'en'
+    }
   }
 }
 </script>

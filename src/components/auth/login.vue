@@ -3,8 +3,8 @@
     <v-card class="login mx-auto">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Login</v-list-item-title>
-          <v-list-item-subtitle>Input your email and password to login</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("login.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("login.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-form
@@ -14,14 +14,14 @@
         <v-text-field
           v-model="email"
           :rules="[rules.required]"
-          label="Email"
+          :label="$t('login.username')"
           autocomplete="username"
           required
         />
         <v-text-field
           v-model="password"
           :rules="[rules.required, rules.min]"
-          label="Password"
+          :label="$t('login.password')"
           type="password"
           autocomplete="current-password"
           required
@@ -29,16 +29,18 @@
         <v-layout justify-center>
           <v-btn
             class="primary"
+            :disabled="this.$store.getters.isApiLoading"
             @click="login"
           >
-            Login
+            {{ $t("login.login") }}
           </v-btn>
           <router-link to="/agreement">
             <v-btn
               text
               color="accent-4"
+              :disabled="this.$store.getters.isApiLoading"
             >
-              Signup
+              {{ $t("login.signup") }}
             </v-btn>
           </router-link>
         </v-layout>
@@ -51,7 +53,7 @@
             small
             color="warning"
           >
-            Forgot Password?
+            {{ $t("login.forgot") }}
           </v-btn>
         </router-link>
       </v-card-actions>
@@ -63,7 +65,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Login Failed</v-card-title>
+        <v-card-title>{{ $t("login.dialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -87,10 +89,6 @@ export default {
   name: 'Login',
   data () {
     return {
-      apiHeaders: {
-        'Authorization': localStorage.idToken,
-        'Content-Type': 'application/json'
-      },
       email: '',
       password: '',
       rules: {
@@ -104,6 +102,7 @@ export default {
   methods: {
     login () {
       if (this.$refs.loginForm.validate()) {
+        this.$store.commit('setIsApiLoading', true)
         this.$cognito.login(this.email, this.password)
           .then(result => {
             localStorage.setItem('idToken', result.idToken.jwtToken)
@@ -132,6 +131,7 @@ export default {
               })
           })
           .catch(err => {
+            this.$store.commit('setIsApiLoading', false)
             this.errorMessage = err.message
             this.dialog = true
           })

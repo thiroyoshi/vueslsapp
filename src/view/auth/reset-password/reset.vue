@@ -12,7 +12,7 @@
         >
           <v-icon id="back-icon">
             fa-arrow-left
-          </v-icon>back to home
+          </v-icon>{{ $t("reset.toHome") }}
         </v-btn>
       </router-link>
     </v-layout>

@@ -1,12 +1,12 @@
 <template>
   <v-container id="register-content">
-    <h2>Register Profile</h2>
+    <h2>{{ $t("register.title") }}</h2>
     <v-divider />
     <v-container>
       <v-card>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Profile</v-list-item-title>
+            <v-list-item-title>{{ $t("register.profile.title") }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
@@ -17,7 +17,7 @@
           <v-text-field
             v-model="profile.username"
             :rules="[rules.required, rules.max]"
-            label="Username"
+            :label="$t('register.profile.username')"
             :disabled="this.$store.getters.isApiLoading"
             counter
             required
@@ -27,7 +27,7 @@
             :disabled="this.$store.getters.isApiLoading"
             @click="register"
           >
-            Register
+            {{ $t("register.register") }}
           </v-btn>
         </v-form>
       </v-card>
@@ -39,7 +39,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>API Request Failed</v-card-title>
+        <v-card-title>{{ $t("register.dialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -66,10 +66,6 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         max: v => v.length <= 30 || 'Max 30 characters'
-      },
-      apiHeaders: {
-        'Authorization': localStorage.idToken,
-        'Content-Type': 'application/json'
       },
       profile: {
         username: '',

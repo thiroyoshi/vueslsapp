@@ -1,0 +1,382 @@
+{
+  "ja": {
+    "landing": {
+      "title": "これは Vue + Serverless Framework App です",
+      "login": "ログイン",
+      "signup": "サインアップ"
+    },
+    "login": {
+      "title": "ログイン",
+      "subtitle": "メールアドレスとパスワードでログインしてください",
+      "username": "メールアドレス",
+      "password": "パスワード",
+      "login": "ログイン",
+      "signup": "サインアップ",
+      "forgot": "パスワードをお忘れですか？",
+      "toHome": "戻る",
+      "dialog": {
+        "title": "ログインに失敗しました"
+      }
+    },
+    "agreement":{
+        "title": "利用規約",
+        "text": "利用規約に同意しますか？",
+        "notAgree": "同意しない",
+        "agree": "同意する"
+    },
+    "signup": {
+      "title": "サインアップ",
+      "subtitle": "メールアドレスとパスワードを入力してください。",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordConfirm": "パスワード（確認用）",
+      "signup": "サインアップする",
+      "dialog": {
+        "title": "サインアップに失敗しました"
+      },
+      "alert": "これはサンプルアプリです。通常使用されている本物のパスワードは使わないでください",
+      "toHome": "戻る"
+    },
+    "confirm": {
+      "alert": "確認コードをメールでお送りしています。メールをご確認下さい。",
+      "title": "コード確認",
+      "subtitle": "メールアドレスと確認コードを入力してください",
+      "email": "メールアドレス",
+      "verificationCode": "確認コード",
+      "confirm": "確認",
+      "successDialog": {
+        "title": "コードの確認が完了しました！",
+        "text": "ログイン可能になりました。OKをクリックしてログインに進んでください"
+      },
+      "errorDialog": {
+        "title": "コードの確認に失敗しました"
+      },
+      "toHome": "戻る"
+    },
+    "register": {
+        "title": "プロフィール登録",
+        "profile":{
+            "title": "プロフィール",
+            "username": "ユーザー名"
+        },
+        "register": "登録する",
+        "dialog":{
+            "title": "APIリクエストが失敗しました"
+        }
+    },
+    "forgot": {
+      "title": "パスワードをお忘れですか？",
+      "subtitle": "お使いのメールアドレスを入力して下さい。",
+      "email": "メールアドレス",
+      "request": "パスワードをリセットする",
+      "dialog": {
+        "title": "パスワードのリセットに失敗しました"
+      },
+      "toHome": "戻る"
+    },
+    "reset": {
+      "title": "パスワードをリセットしますか？",
+      "subtitle": "メールで送られた確認コードと新しいパスワードを入力してください。",
+      "email": "メールアドレス",
+      "verificationCode": "確認コード",
+      "password": "パスワード",
+      "passwordConfirm": "パスワード（確認用）",
+      "reset": "パスワードをリセットする",
+      "dialog": {
+        "title": "パスワードリセットが完了しました",
+        "text": "新しいパスワードが設定されました。OKをクリックしてログインに進んでください。"
+      },
+      "errorDialog": {
+        "title": "Reset Password Failed"
+      },
+      "toHome": "戻る"
+    },
+    "home": {
+        "getApi": {
+            "title": "GET REST APIリクエスト",
+            "subtitle": "GETのREST APIをテストしましょう",
+            "request": "メッセージを取得する",
+            "result": "リクエスト結果"
+        },
+        "postApi": {
+            "title": "POST REST APIリクエスト",
+            "subtitle": "POSTのREST APIをテストしましょう",
+            "request": "メッセージを登録する",
+            "message": "メッセージ",
+            "result": "リクエスト結果"
+        },
+        "putApi": {
+            "title": "PUT REST APIリクエスト",
+            "subtitle": "PUTのREST APIをテストしましょう",
+            "request": "メッセージを更新する",
+            "message": "メッセージ",
+            "messageId": "メッセージID",
+            "result": "リクエスト結果"
+        },
+        "deleteApi": {
+            "title": "DELETE REST APIリクエスト",
+            "subtitle": "DELETEのREST APIをテストしましょう",
+            "request": "メッセージを削除する",
+            "messageId": "メッセージID",
+            "result": "リクエスト結果"
+        },
+        "dialog":{
+            "title": "APIリクエストに失敗しました"
+        }
+    },
+    "settings": {
+      "title": "設定",
+      "profile": {
+        "title": "プロフィール",
+        "username": "ユーザー名",
+        "email": "メールアドレス"
+      },
+      "update": "更新",
+      "password": {
+        "title": "パスワード",
+        "oldPassword": "現在のパスワード",
+        "newPassword": "新しいパスワード",
+        "passwordConfirm": "新しいパスワード（確認用）"
+      },
+      "deleteAccount": {
+        "title": "アカウント削除",
+        "message": "すべてのデータが削除されてしまいます",
+        "delete": "削除"
+      },
+      "passwordDialog": {
+        "title": "パスワード変更に成功しました"
+      },
+      "passwordErrorDialog": {
+        "title": "パスワード変更ができませんでした",
+        "text": "パスワードが一致していません"
+      },
+      "deleteDialog": {
+        "title": "本当にアカウントを削除しよろしいですか？",
+        "text": "すべてのアカウントのデータが削除されます。",
+        "cancel": "キャンセル",
+        "delete": "削除"
+      },
+      "apiErrorDialog": {
+        "title": "APIリクエストに失敗しました"
+      }
+    },
+    "header": {
+      "settings": "設定",
+      "logout": "ログアウト"
+    },
+    "footer": {
+      "about": "このサービスについて",
+      "terms": "利用規約",
+      "privacypolicy": "プライバシーポリシー",
+      "help": "ヘルプ"
+    },
+    "about": {
+        "title": "このサービスについて",
+        "text" : "ここはサービスについてのページです"
+    },
+    "terms": {
+        "title": "利用規約"
+    },
+    "privacy": {
+        "title": "プライバシーポリシー",
+        "text" : "ここはプライバシーポリシーについてのページです"
+    },
+    "help": {
+        "title": "ヘルプ",
+        "text" : "ここはヘルプについてのページです"
+    },
+    "notfound": {
+        "title" : "ご指定のページが見つかりません",
+        "toHome": "戻る"
+    }
+  },
+  "en": {
+    "landing": {
+      "title": "This is Vue + Serverless Framework App",
+      "login": "Login",
+      "signup": "Signup"
+    },
+    "login": {
+      "title": "Login",
+      "subtitle": "Input your email and password to login",
+      "username": "Email",
+      "password": "Password",
+      "login": "Login",
+      "signup": "Signup",
+      "forgot": "Forgot Password?",
+      "toHome": "Back to home",
+      "dialog": {
+        "title": "Login Failed"
+      }
+    },
+    "agreement":{
+        "title": "Terms and Conditions",
+        "text": "Do you agree with the terms and conditions?",
+        "notAgree": "Not Agree",
+        "agree": "I Agree"
+    },
+    "signup": {
+      "title": "Signup",
+      "subtitle": "Input your email and password to sign up",
+      "email": "E-mail",
+      "password": "Password",
+      "passwordConfirm": "Password(Confirm)",
+      "signup": "Signup",
+      "dialog": {
+        "title": "Sign up Failed"
+      },
+      "alert": "Do NOT use the serious password you usually use, because this is a sample app.",
+      "toHome": "Back to Home"
+    },
+    "confirm": {
+      "alert": "You got verification code from email. Please check your email.",
+      "title": "Confirm",
+      "subtitle": "Input your email and verification code you got from email",
+      "email": "E-mail",
+      "verificationCode": "Verification Code",
+      "confirm": "Confirm",
+      "successDialog": {
+        "title": "Verification Success!",
+        "text": "Now you can login! Click Ok to go to the login view"
+      },
+      "errorDialog": {
+        "title": "Verification Failed"
+      },
+      "toHome": "Back to Home"
+    },
+    "register": {
+        "title": "Register Profile",
+        "profile":{
+            "title": "Profile",
+            "username": "Username"
+        },
+        "register": "Register",
+        "dialog":{
+            "title": "API Request Failed"
+        }
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Input your email to reset password",
+      "email": "E-mail",
+      "request": "Reset Request",
+      "dialog": {
+        "title": "Reset Request Failed"
+      }
+    },
+    "reset": {
+      "title": "Reset your password?",
+      "subtitle": "Input verification code and new password",
+      "email": "E-mail",
+      "verificationCode": "Verification Code",
+      "password": "Password",
+      "passwordConfirm": "Password(Confirm)",
+      "reset": "Reset Password",
+      "dialog": {
+        "title": "Verification Success!",
+        "text": "Now you got new password! Click Ok to go to the login view"
+      },
+      "errorDialog": {
+        "title": "Reset Password Failed"
+      }
+    },
+    "home": {
+        "getApi": {
+            "title": "GET REST API Request",
+            "subtitle": "Test GET API",
+            "request": "GET Message",
+            "result": "API Result"
+        },
+        "postApi": {
+            "title": "POST REST API Request",
+            "subtitle": "Test POST API",
+            "request": "POST Message",
+            "message": "Message",
+            "result": "API Result"
+        },
+        "putApi": {
+            "title": "PUT REST API Request",
+            "subtitle": "Test PUT API",
+            "request": "PUT Message",
+            "message": "Message",
+            "messageId": "Message ID",
+            "result": "API Result"
+        },
+        "deleteApi": {
+            "title": "DELETE REST API Request",
+            "subtitle": "Test DELETE API",
+            "request": "DELETE Message",
+            "messageId": "Message ID",
+            "result": "API Result"
+        },
+        "dialog":{
+            "title": "API Request Failed"
+        }
+    },
+    "settings": {
+      "title": "Settings",
+      "profile": {
+        "title": "Profile",
+        "username": "Username",
+        "email": "E-mail"
+      },
+      "update": "Update",
+      "password": {
+        "title": "Password",
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "passwordConfirm": "New Password(Confirm)"
+      },
+      "deleteAccount": {
+        "title": "Delete Account",
+        "message": "Make sure that you want to delete your ALL DATA.",
+        "delete": "Delete"
+      },
+      "passwordDialog": {
+        "title": "Password Changed Successfuly"
+      },
+      "passwordErrorDialog": {
+        "title": "Password Validation Failed",
+        "text": "Your new passwords are not match."
+      },
+      "deleteDialog": {
+        "title": "Are you sure to delete the account?",
+        "text": "All your data will be deleted.",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "apiErrorDialog": {
+        "title": "Settings API Request Failed"
+      }
+    },
+    "header": {
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "footer": {
+      "about": "About",
+      "terms": "Terms",
+      "privacypolicy": "Privact Policy",
+      "help": "Help"
+    },
+    "about": {
+        "title": "About",
+        "text" : "This is About page."
+    },
+    "terms": {
+        "title": "Terms and Conditions"
+    },
+    "privacy": {
+        "title": "Privacy",
+        "text" : "This is Privacy page."
+    },
+    "help": {
+        "title": "Help",
+        "text" : "This is Help page."
+    },
+    "notfound": {
+        "title" : "Not Found",
+        "toHome": "Back to Home"
+    }
+  }
+}

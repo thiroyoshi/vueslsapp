@@ -3,8 +3,8 @@
     <v-card class="forgot mx-auto">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Forgot your password?</v-list-item-title>
-          <v-list-item-subtitle>Input your email to reset password</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("forgot.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("forgot.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-form
@@ -14,7 +14,7 @@
         <v-text-field
           v-model="email"
           :rules="[rules.required]"
-          label="Email"
+          :label="$t('forgot.email')"
           required
         />
         <v-layout justify-center>
@@ -22,7 +22,7 @@
             class="primary"
             @click="forgotPassword"
           >
-            Reset Request
+            {{ $t("forgot.request") }}
           </v-btn>
         </v-layout>
       </v-form>
@@ -34,7 +34,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Reset Request Failed</v-card-title>
+        <v-card-title>{{ $t("forgot.dialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />

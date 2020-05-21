@@ -3,8 +3,8 @@
     <v-card class="signup mx-auto">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Sign Up</v-list-item-title>
-          <v-list-item-subtitle>Input your email and password to sign up</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("signup.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("signup.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-form
@@ -14,13 +14,13 @@
         <v-text-field
           v-model="email"
           :rules="[rules.required]"
-          label="Email"
+          :label="$t('signup.email')"
           required
         />
         <v-text-field
           v-model="password"
           :rules="[rules.required, rules.min]"
-          label="Password"
+          :label="$t('signup.password')"
           type="password"
           autocomplete="new-password"
           required
@@ -28,7 +28,7 @@
         <v-text-field
           v-model="passwordConfirm"
           :rules="[rules.required, rules.min]"
-          label="Password(Confirm)"
+          :label="$t('signup.passwordConfirm')"
           type="password"
           autocomplete="new-password"
           required
@@ -38,7 +38,7 @@
             class="primary"
             @click="singup"
           >
-            Sign Up
+            {{ $t("signup.signup") }}
           </v-btn>
         </v-layout>
       </v-form>
@@ -50,7 +50,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Sign up Failed</v-card-title>
+        <v-card-title>{{ $t("signup.dialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />

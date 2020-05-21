@@ -7,7 +7,7 @@
       id="signup-alert"
       type="error"
     >
-      Do NOT use the serious password you usually use, because this is a sample app and do not use HTTPS.
+      {{ $t("signup.alert") }}
     </v-alert>
     <v-layout justify-center>
       <router-link to="/">
@@ -18,7 +18,7 @@
         >
           <v-icon id="back-icon">
             fa-arrow-left
-          </v-icon>back to home
+          </v-icon>{{ $t("signup.toHome") }}
         </v-btn>
       </router-link>
     </v-layout>

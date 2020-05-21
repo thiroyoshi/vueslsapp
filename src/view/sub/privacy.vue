@@ -1,9 +1,9 @@
 <template>
   <v-container id="privacy-content">
-    <h2>Privacy</h2>
+    <h2>{{ $t("privacy.title") }}</h2>
     <v-divider />
     <div>
-      This is Privacy page.
+      {{ $t("privacy.text") }}
     </div>
   </v-container>
 </template>

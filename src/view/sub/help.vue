@@ -1,9 +1,9 @@
 <template>
   <v-container id="help-content">
-    <h2>Help</h2>
+    <h2>{{ $t("help.title") }}</h2>
     <v-divider />
     <div>
-      This is Help page.
+      {{ $t("help.text") }}
     </div>
   </v-container>
 </template>

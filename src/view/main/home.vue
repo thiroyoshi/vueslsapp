@@ -4,8 +4,8 @@
     <v-card raised>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>GET REST API Request</v-list-item-title>
-          <v-list-item-subtitle>Test REST API</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("home.getApi.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("home.getApi.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -15,7 +15,7 @@
           :disabled="this.$store.getters.isApiLoading"
           @click="getMessage"
         >
-          GET Message
+          {{ $t("home.getApi.request") }}
         </v-btn>
         <v-progress-circular
           v-show="this.$store.getters.isApiLoading"
@@ -32,7 +32,7 @@
           counter
           no-resize
           readonly
-          label="API Result"
+          :label="$t('home.getApi.result')"
         />
       </v-form>
     </v-card>
@@ -42,8 +42,8 @@
     <v-card raised>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>POST REST API Request</v-list-item-title>
-          <v-list-item-subtitle>Test REST API</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("home.postApi.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("home.postApi.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -51,14 +51,14 @@
         <v-text-field
           v-model="postApiBody.message"
           counter
-          label="Message"
+          :label="$t('home.postApi.message')"
         />
         <v-btn
           color="primary"
           :disabled="this.$store.getters.isApiLoading"
           @click="postMessage"
         >
-          POST Message
+          {{ $t("home.postApi.request") }}
         </v-btn>
         <v-progress-circular
           v-show="this.$store.getters.isApiLoading"
@@ -75,7 +75,7 @@
           counter
           no-resize
           readonly
-          label="API Result"
+          :label="$t('home.postApi.result')"
         />
       </v-form>
     </v-card>
@@ -85,8 +85,8 @@
     <v-card raised>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>PUT REST API Request</v-list-item-title>
-          <v-list-item-subtitle>Test REST API</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("home.putApi.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("home.putApi.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -94,19 +94,19 @@
         <v-text-field
           v-model="putApiBody.message"
           counter
-          label="Message"
+          :label="$t('home.putApi.message')"
         />
         <v-text-field
           v-model="putApiBody.message_id"
           counter
-          label="Message ID"
+          :label="$t('home.putApi.messageId')"
         />
         <v-btn
           color="primary"
           :disabled="this.$store.getters.isApiLoading"
           @click="putMessage"
         >
-          PUT Message
+          {{ $t("home.putApi.request") }}
         </v-btn>
         <v-progress-circular
           v-show="this.$store.getters.isApiLoading"
@@ -123,7 +123,7 @@
           counter
           no-resize
           readonly
-          label="API Result"
+          :label="$t('home.putApi.result')"
         />
       </v-form>
     </v-card>
@@ -133,8 +133,8 @@
     <v-card raised>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>DELETE REST API Request</v-list-item-title>
-          <v-list-item-subtitle>Test REST API</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("home.deleteApi.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("home.deleteApi.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -142,14 +142,14 @@
         <v-text-field
           v-model="deleteApiBody.message_id"
           counter
-          label="Message ID"
+          :label="$t('home.deleteApi.messageId')"
         />
         <v-btn
           color="primary"
           :disabled="this.$store.getters.isApiLoading"
           @click="deleteMessage"
         >
-          DELETE Message
+          {{ $t("home.deleteApi.request") }}
         </v-btn>
         <v-progress-circular
           v-show="this.$store.getters.isApiLoading"
@@ -166,7 +166,7 @@
           counter
           no-resize
           readonly
-          label="API Result"
+          :label="$t('home.deleteApi.result')"
         />
       </v-form>
     </v-card>
@@ -177,7 +177,7 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title>API Request Failed</v-card-title>
+        <v-card-title>{{ $t("home.dialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -267,7 +267,7 @@ export default {
 <style scoped>
 #home-content {
   margin-top: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 90px;
 }
 .input-form {
   padding-top: 20px;

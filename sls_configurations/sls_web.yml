@@ -3,57 +3,57 @@ Resources:
   StaticSite:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: PublicRead
+      # AccessControl: PublicRead
       BucketName: ${self:custom.siteName}
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: index.html
+      # WebsiteConfiguration:
+      #   IndexDocument: index.html
+      #   ErrorDocument: index.html
 
-  StaticSiteS3BucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket:
-        Ref: StaticSite
-      PolicyDocument:
-        Statement:
-          - Sid: PublicReadGetObject
-            Effect: Allow
-            Principal: "*"
-            Action:
-            - s3:GetObject
-            Resource:
-              Fn::Join: [
-                "", [
-                  "arn:aws:s3:::",
-                  {
-                    "Ref": "StaticSite"
-                  },
-                  "/*"
-                ]
-              ]
+  # StaticSiteS3BucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket:
+  #       Ref: StaticSite
+  #     PolicyDocument:
+  #       Statement:
+  #         - Sid: PublicReadGetObject
+  #           Effect: Allow
+  #           Principal: "*"
+  #           Action:
+  #           - s3:GetObject
+  #           Resource:
+  #             Fn::Join: [
+  #               "", [
+  #                 "arn:aws:s3:::",
+  #                 {
+  #                   "Ref": "StaticSite"
+  #                 },
+  #                 "/*"
+  #               ]
+  #             ]
 
-  DnsRecord:
-    Type: "AWS::Route53::RecordSet"
-    Properties:
-      AliasTarget:
-        DNSName: ${self:custom.aliasDNSName}
-        HostedZoneId: ${self:custom.aliasHostedZoneId}
-      HostedZoneName: ${self:custom.domain}.
-      Name:
-        Ref: StaticSite
-      Type: 'A'
+  # DnsRecord:
+  #   Type: "AWS::Route53::RecordSet"
+  #   Properties:
+  #     AliasTarget:
+  #       DNSName: ${self:custom.aliasDNSName}
+  #       HostedZoneId: ${self:custom.aliasHostedZoneId}
+  #     HostedZoneName: ${self:custom.domain}.
+  #     Name:
+  #       Ref: StaticSite
+  #     Type: 'A'
 
-Outputs:
-  StaticSiteS3BucketName:
-    Value:
-      'Ref': StaticSite
-  StaticSiteS3BucketDomainName:
-    Value:
-      Fn::GetAtt:
-        - StaticSite
-        - DomainName
-  StaticSiteS3BucketWebsiteURL:
-    Value:
-      Fn::GetAtt:
-        - StaticSite
-        - WebsiteURL
+# Outputs:
+#   StaticSiteS3BucketName:
+#     Value:
+#       'Ref': StaticSite
+#   StaticSiteS3BucketDomainName:
+#     Value:
+#       Fn::GetAtt:
+#         - StaticSite
+#         - DomainName
+#   StaticSiteS3BucketWebsiteURL:
+#     Value:
+#       Fn::GetAtt:
+#         - StaticSite
+#         - WebsiteURL

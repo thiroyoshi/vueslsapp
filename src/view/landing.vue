@@ -5,7 +5,7 @@
       fluid
     >
       <v-layout justify-center>
-        <h3>This is Vue + Serverless Framework App</h3>
+        <h3>{{ $t("landing.title") }}</h3>
       </v-layout>
     </v-container>
     <v-container>
@@ -15,21 +15,22 @@
         no-gutters
       >
         <div class="pa-3">
-          <v-btn
-            class="pa-3"
-            color="primary"
-            href="/login"
+          <router-link
+            to="/login"
           >
-            Login
-          </v-btn>
+            <v-btn color="primary">
+              {{ $t("landing.login") }}
+            </v-btn>
+          </router-link>
         </div>
         <div class="pa-3">
-          <v-btn
-            color="primary"
-            href="/agreement"
+          <router-link
+            to="/agreement"
           >
-            Signup
-          </v-btn>
+            <v-btn color="primary">
+              {{ $t("landing.signup") }}
+            </v-btn>
+          </router-link>
         </div>
       </v-row>
     </v-container>

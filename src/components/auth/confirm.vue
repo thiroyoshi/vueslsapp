@@ -1,14 +1,14 @@
 <template>
   <div id="signup-content">
     <v-alert type="info">
-      You got verification code from email. Please check your email.
+      {{ $t("confirm.alert") }}
     </v-alert>
 
     <v-card class="signup mx-auto">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Confirm</v-list-item-title>
-          <v-list-item-subtitle>Input your email and verification code you got from email</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("confirm.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("confirm.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-form
@@ -17,14 +17,14 @@
       >
         <v-text-field
           v-model="email"
-          label="Email"
+          :label="$t('confirm.email')"
           readonly
           required
         />
         <v-text-field
           v-model="verificationCode"
           :rules="[rules.required, rules.equal]"
-          label="Verification Code"
+          :label="$t('confirm.verificationCode')"
           required
         />
         <v-layout justify-center>
@@ -32,7 +32,7 @@
             class="primary"
             @click="confirm"
           >
-            Confirm
+            {{ $t("confirm.confirm") }}
           </v-btn>
         </v-layout>
       </v-form>
@@ -44,8 +44,8 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Verification Success!</v-card-title>
-        <v-card-text>Now you can login! Click Ok to go to the login view</v-card-text>
+        <v-card-title>{{ $t("confirm.successDialog.title") }}</v-card-title>
+        <v-card-text>{{ $t("confirm.successDialog.text") }}</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -65,7 +65,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Verification Failed</v-card-title>
+        <v-card-title>{{ $t("confirm.errorDialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />

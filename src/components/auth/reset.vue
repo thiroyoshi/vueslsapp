@@ -3,8 +3,8 @@
     <v-card class="reset mx-auto">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Reset your password?</v-list-item-title>
-          <v-list-item-subtitle>Input verification code and new password</v-list-item-subtitle>
+          <v-list-item-title>{{ $t("reset.title") }}</v-list-item-title>
+          <v-list-item-subtitle>{{ $t("reset.subtitle") }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-form
@@ -14,20 +14,20 @@
         <v-text-field
           v-model="email"
           :rules="[rules.required]"
-          label="Email"
+          :label="$t('reset.email')"
           readonly
           required
         />
         <v-text-field
           v-model="verificationCode"
           :rules="[rules.required, rules.equal]"
-          label="Verification Code"
+          :label="$t('reset.verificationCode')"
           required
         />
         <v-text-field
           v-model="password"
           :rules="[rules.required, rules.min]"
-          label="Password"
+          :label="$t('reset.password')"
           type="password"
           autocomplete="new-password"
           required
@@ -35,7 +35,7 @@
         <v-text-field
           v-model="passwordConfirm"
           :rules="[rules.required, rules.min]"
-          label="Password(Confirm)"
+          :label="$t('reset.passwordConfirm')"
           type="password"
           autocomplete="new-password"
           required
@@ -45,7 +45,7 @@
             class="primary"
             @click="resetPassword"
           >
-            Reset Password
+            {{ $t("reset.reset") }}
           </v-btn>
         </v-layout>
       </v-form>
@@ -57,8 +57,8 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Verification Success!</v-card-title>
-        <v-card-text>Now you got new password! Click Ok to go to the login view</v-card-text>
+        <v-card-title>{{ $t("reset.dialog.title") }}</v-card-title>
+        <v-card-text>{{ $t("reset.dialog.text") }}</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -78,7 +78,7 @@
       max-width="500"
     >
       <v-card class="mx-auto">
-        <v-card-title>Reset Password Failed</v-card-title>
+        <v-card-title>{{ $t("reset.errorDialog.title") }}</v-card-title>
         <v-card-text>{{ errorMessage }}</v-card-text>
         <v-card-actions>
           <v-spacer />

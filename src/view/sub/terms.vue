@@ -1,10 +1,19 @@
 <template>
   <v-container id="terms-content">
-    <h2>Terms and Conditions</h2>
+    <h2>{{ $t("terms.title") }}</h2>
     <v-divider />
     <v-container id="terms-window">
       <v-textarea
-        v-model="termsText"
+        v-show="this.$i18n.locale==='ja'"
+        v-model="termsTextJa"
+        outlined
+        no-resize
+        readonly
+        height="60vh"
+      />
+      <v-textarea
+        v-show="this.$i18n.locale==='en'"
+        v-model="termsTextEn"
         outlined
         no-resize
         readonly
@@ -19,13 +28,18 @@ export default {
   name: 'Terms',
   data: function () {
     return {
-      termsText: ''
+      termsTextJa: '',
+      termsTextEn: ''
     }
   },
   mounted: function () {
-    this.axios.get('terms.txt')
+    this.axios.get('ja/terms.txt')
       .then(res => {
-        this.termsText = res.data
+        this.termsTextJa = res.data
+      })
+    this.axios.get('en/terms.txt')
+      .then(res => {
+        this.termsTextEn = res.data
       })
   }
 

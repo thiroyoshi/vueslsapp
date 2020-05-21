@@ -29,13 +29,13 @@
             <v-icon :style="{marginRight: '10px'}">
               fa-user-cog
             </v-icon>
-            <span>Settings</span>
+            <span>{{ $t("header.settings") }}</span>
           </v-list-item>
           <v-list-item @click="logout">
             <v-icon :style="{marginRight: '10px'}">
               fa-sign-out-alt
             </v-icon>
-            <span>Logout</span>
+            <span>{{ $t("header.logout") }}</span>
           </v-list-item>
         </v-list>
       </v-menu>

@@ -1,11 +1,20 @@
 <template>
   <div id="terms-content">
     <v-layout justify-center>
-      <h3>Terms and Conditions</h3>
+      <h3>{{ $t("agreement.title") }}</h3>
     </v-layout>
     <v-container id="terms-window">
       <v-textarea
-        v-model="termsText"
+        v-show="this.$i18n.locale==='ja'"
+        v-model="termsTextJa"
+        outlined
+        no-resize
+        readonly
+        height="50vh"
+      />
+      <v-textarea
+        v-show="this.$i18n.locale==='en'"
+        v-model="termsTextEn"
         outlined
         no-resize
         readonly
@@ -13,7 +22,7 @@
       />
     </v-container>
     <v-layout justify-center>
-      <div>Do you agree with the terms and conditions?</div>
+      <div>{{ $t("agreement.text") }}</div>
     </v-layout>
     <v-layout justify-center>
       <router-link
@@ -21,7 +30,7 @@
         class="agree-btn"
       >
         <v-btn text>
-          Not Agree
+          {{ $t("agreement.notAgree") }}
         </v-btn>
       </router-link>
       <router-link
@@ -29,7 +38,7 @@
         class="agree-btn"
       >
         <v-btn color="primary">
-          I Agree
+          {{ $t("agreement.agree") }}
         </v-btn>
       </router-link>
     </v-layout>
@@ -41,13 +50,18 @@ export default {
   name: 'AgreementView',
   data: function () {
     return {
-      termsText: ''
+      termsTextJa: '',
+      termsTextEn: ''
     }
   },
   mounted: function () {
-    this.axios.get('terms.txt')
+    this.axios.get('ja/terms.txt')
       .then(res => {
-        this.termsText = res.data
+        this.termsTextJa = res.data
+      })
+    this.axios.get('en/terms.txt')
+      .then(res => {
+        this.termsTextEn = res.data
       })
   }
 }
