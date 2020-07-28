@@ -4,6 +4,7 @@
 from functions.common.framework import LambdaApiFramework
 from functions.repository.users_repository import UsersRepository
 
+
 class ApiHandler(LambdaApiFramework):
 
     def __init__(self):
@@ -14,26 +15,34 @@ class ApiHandler(LambdaApiFramework):
         email = body.get("email")
         _ = UsersRepository.post_user_by_cognito_user_id(self.cognito_user_id, username, email)
         statusCode = 201
-        body ={
+        body = {
             "message": "created"
         }
         return statusCode, body
-        
+
 
 def lambda_handler(event, context):
     valid_rules = {
-        "body":{
-            "username" : {
-                "type" : "String",
-                "rule" : {
-                    "length" : {
-                        "upper" : 30,
-                        "lower" : 1
+        "body": {
+            "username": {
+                "required": True,
+                "type": "String",
+                "rule": {
+                    "length": {
+                        "upper": 30,
+                        "lower": 1
                     }
                 }
             },
-            "email" : {
-                "type" : "String"
+            "email": {
+                "required": True,
+                "type": "String",
+                "rule": {
+                    "length": {
+                        "upper": 50,
+                        "lower": 1
+                    }
+                }
             }
         }
     }

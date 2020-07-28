@@ -5,7 +5,7 @@ service: vueslsapp
 provider:
   name: aws
   stage: dev
-  runtime: python3.7
+  runtime: python3.8
   region: <YOUR AWS REGION>
   role: arn:aws:iam::${file(sls_configurations/config/common.yml):ACCOUNT_ID}:role/${opt:stage, self:provider.stage}-${self:service.name}-lambda-role
   versionFunctions: false
@@ -16,6 +16,7 @@ provider:
     env: ${self:provider.stage}
     region: ${self:provider.region}
     project: ${self:service.name}
+    PYTHONPATH: /var/runtime:/var/task/pylibs
   tags:
     PROJECT: ${self:service.name}
 

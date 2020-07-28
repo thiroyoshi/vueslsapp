@@ -4,6 +4,7 @@
 import re
 import json
 import logging
+from pylibs.aws_xray_sdk.core import xray_recorder
 from functions.repository.users_repository import UsersRepository
 
 LOGGER = logging.getLogger()
@@ -11,7 +12,7 @@ LOGGER.setLevel(logging.INFO)
 
 
 class LambdaApiFramework(object):
-    
+
     user_id = None
     cognito_user_id = None
     email = None
@@ -19,12 +20,23 @@ class LambdaApiFramework(object):
     def __init__(self):
         pass
 
-    def validate_String(self, key, val, rule):
+    @xray_recorder.capture('Validate Boolean')
+    def __validate_bool(self, val):
+        error = []
+
+        if type(val) != bool:
+            error.append("Invalid type: %s must be Boolean, val: %s", val)
+
+        return error
+
+    @xray_recorder.capture('Validate String')
+    def __validate_string(self, key, val, rule):
         error = []
 
         try:
             str_val = str(val)
-        except:
+        except Exception as ex:
+            LOGGER.error(ex)
             error.append("Invalid type: %s must be String, val: %s" % (key, val))
             return error
 
@@ -47,12 +59,14 @@ class LambdaApiFramework(object):
 
         return error
 
-    def validate_Int(self, key, val, rule):
+    @xray_recorder.capture('Validate Int')
+    def __validate_int(self, key, val, rule):
         error = []
 
         try:
             int_val = int(val)
-        except:
+        except Exception as ex:
+            LOGGER.error(ex)
             error.append("Invalid type: %s must be Int, val: %s" % (key, val))
             return error
 
@@ -70,12 +84,14 @@ class LambdaApiFramework(object):
 
         return error
 
-    def validate_Float(self, key, val, rule):
+    @xray_recorder.capture('Validate Float')
+    def __validate_float(self, key, val, rule):
         error = []
 
         try:
             float_val = float(val)
-        except:
+        except Exception as ex:
+            LOGGER.error(ex)
             error.append("Invalid type: %s must be Float, val: %s" % (key, val))
             return error
 
@@ -92,7 +108,8 @@ class LambdaApiFramework(object):
 
         return error
 
-    def validate_List(self, key, val, rule):
+    @xray_recorder.capture('Validate List')
+    def __validate_list(self, key, val, rule):
         error = []
         if isinstance(val, list) is False:
             error.append("Invalid type: %s must be List" % key)
@@ -103,7 +120,8 @@ class LambdaApiFramework(object):
 
         return error
 
-    def validate_Dict(self, key, val, rule):
+    @xray_recorder.capture('Validate Dict')
+    def __validate_dict(self, key, val, rule):
         error = []
         if isinstance(val, dict) is False:
             error.append("Invalid type: %s must be Dict" % val)
@@ -114,62 +132,133 @@ class LambdaApiFramework(object):
 
         return error
 
+    @xray_recorder.capture('Validate')
+    def __validate(self, datas, valid_rules, param_type):
 
-    def validate(self, datas, valid_rules, param_type):
+        LOGGER.info("validation : %s", param_type)
+
+        error = []
         errors = []
+
         rules = valid_rules.get(param_type)
         if rules is None:
-            LOGGER.warn("validation rules are not set.")
+            LOGGER.warning("validation rules are not set.")
             return errors
 
-        for key in rules.keys():
-            val = datas.get(key)
-            if val is None:
-                LOGGER.info('validation skip: ( %s , %s )' % (key, val))
-                continue
-
-            rule = rules.get(key)
-            LOGGER.info(json.dumps(rule))
-            rule_type = rule.get('type')
-            if rule_type:
-                if rule_type == "String":
-                    error = self.validate_String(key, val, rule.get('rule'))
-                elif rule_type == "Int":
-                    error = self.validate_Int(key, val, rule.get('rule'))
-                elif rule_type == "Float":
-                    error = self.validate_Float(key, val, rule.get('rule'))
-                elif rule_type == "List":
-                    error = self.validate_List(key, val, rule.get('rule'))
-                elif rule_type == "Dict":
-                    error = self.validate_Dict(key, val, rule.get('rule'))
-            else:
-                LOGGER.warn('type of rule is required.')
+        if datas is None:
+            for key in rules.keys():
+                required = rules.get(key).get('required')
+                if required is None:
+                    continue
+                if required is True:
+                    error.append("required parameter: %s is required" % key)
 
             if error:
-                LOGGER.info('validation error : ( %s , %s )' % (key, val))
-                LOGGER.warn(json.dumps(error))
-                errors.extend(error)
+                LOGGER.info("validation failed.")
+                LOGGER.warning(json.dumps(error))
             else:
-                LOGGER.info('validation passed : ( %s , %s )' % (key, val))
+                LOGGER.info("validation skipped. No data is specified.")
+
+            return error
+
+        else:
+            for key in rules.keys():
+                rule = rules.get(key)
+                LOGGER.info("key: %s", key)
+                LOGGER.info(json.dumps(rule))
+
+                val = datas.get(key)
+                if val is None:
+                    required = rule.get('required')
+                    if required is None:
+                        LOGGER.info('validation skipped. No data is specified: %s', key)
+                        continue
+                    if required is True:
+                        error.append("required parameter: %s is required" % key)
+
+                if not error:
+                    rule_type = rule.get('type')
+                    if rule_type:
+                        if rule_type == "Bool":
+                            error = self.__validate_bool(val)
+                        elif rule_type == "String":
+                            error = self.__validate_string(key, val, rule.get('rule'))
+                        elif rule_type == "Int":
+                            error = self.__validate_int(key, val, rule.get('rule'))
+                        elif rule_type == "Float":
+                            error = self.__validate_float(key, val, rule.get('rule'))
+                        elif rule_type == "List":
+                            error = self.__validate_list(key, val, rule.get('rule'))
+                        elif rule_type == "Dict":
+                            error = self.__validate_dict(key, val, rule.get('rule'))
+                    else:
+                        LOGGER.warning('type of rule is not set.')
+
+                if error:
+                    LOGGER.info('validation error : ( %s , %s )', key, val)
+                    LOGGER.warning(json.dumps(error))
+                    errors.extend(error)
+                    error = []
+                else:
+                    LOGGER.info('validation passed : ( %s , %s )', key, val)
 
         if errors:
             LOGGER.info("validation failed.")
-            LOGGER.warn(json.dumps(errors))
-        else: 
-            LOGGER.info("validation passed.")
+            LOGGER.warning(json.dumps(errors))
+        else:
+            LOGGER.info("all validation passed.")
 
         return errors
 
+    @xray_recorder.capture('Set Default Values')
+    def __set_defalut(self, datas, valid_rules, param_type):
 
+        LOGGER.info("set default : %s", param_type)
+
+        rules = valid_rules.get(param_type)
+        if rules is None:
+            LOGGER.warning("validation rules are not set.")
+            return datas
+
+        if datas is None:
+            new_datas = {}
+        else:
+            new_datas = datas
+
+        for key in rules.keys():
+            rule = rules.get(key)
+            LOGGER.info("key: %s", key)
+            LOGGER.info(json.dumps(rule))
+
+            val = new_datas.get(key)
+            if val is not None:
+                continue
+
+            default_val = rule.get('default')
+            if default_val is not None:
+                new_datas[key] = default_val
+                LOGGER.info("set default: %s, %s", key, default_val)
+            else:
+                LOGGER.info("No default rule is set : %s", key)
+
+        return new_datas
 
     def controller(self, query_strings=None, body=None, path_params=None):
-        LOGGER.warn("controller is not implemented.")
+        LOGGER.warning("controller is not implemented.")
         return 200, {"message": "controller is not implemented."}
 
+    @xray_recorder.capture('Create Response')
+    def __response(self, status_code=200, body=None):
+        if body is None:
+            body = {"message": "default response"}
 
-    def response(self, statusCode=200, body={"message": "default response"}):
+        if status_code == 200 or status_code == 201:
+            body["status"] = "success"
+        else:
+            body["status"] = "failure"
+
         response = {
-            "statusCode": statusCode,
+            "statusCode": status_code,
             "headers": {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Credentials': True,
@@ -179,7 +268,7 @@ class LambdaApiFramework(object):
         LOGGER.info(json.dumps(response))
         return response
 
-
+    @xray_recorder.capture('Handler')
     def handler(self, event, valid_rules=None):
 
         LOGGER.info(json.dumps(event))
@@ -205,30 +294,49 @@ class LambdaApiFramework(object):
 
         try:
             errors = []
-            if query_strings is not None:
-                LOGGER.info("validation : queryStringParameters")
-                errors.extend(self.validate(query_strings, valid_rules, 'query_string'))
-            if body is not None:
-                LOGGER.info("validation : body")
-                errors.extend(self.validate(body, valid_rules, 'body'))
-            if path_params is not None:
-                LOGGER.info("validation : pathParameters")
-                errors.extend(self.validate(path_params, valid_rules, 'path_params'))
+            if valid_rules is not None:
+                rules = valid_rules.get('queryString')
+                if rules is not None or query_strings is not None:
+                    errors.extend(self.__validate(query_strings, valid_rules, 'queryString'))
+                rules = valid_rules.get('body')
+                if rules is not None or body is not None:
+                    errors.extend(self.__validate(body, valid_rules, 'body'))
+                rules = valid_rules.get('pathParams')
+                if rules is not None or path_params is not None:
+                    errors.extend(self.__validate(path_params, valid_rules, 'pathParams'))
+            else:
+                LOGGER.warning("validation rules are not set.")
 
             if not errors:
-                statusCode, response_body = self.controller(query_strings, body, path_params)
+                # set default val
+                if valid_rules is not None:
+                    rules = valid_rules.get('queryString')
+                    if rules is not None or query_strings is not None:
+                        query_strings = self.__set_defalut(query_strings, valid_rules, 'queryString')
+
+                    rules = valid_rules.get('body')
+                    if rules is not None or body is not None:
+                        body = self.__set_defalut(body, valid_rules, 'body')
+
+                    rules = valid_rules.get('pathParams')
+                    if rules is not None or path_params is not None:
+                        path_params = self.__set_defalut(path_params, valid_rules, 'pathParams')
+
+                xray_recorder.begin_subsegment('Controller')
+                status_code, response_body = self.controller(query_strings, body, path_params)
+                xray_recorder.end_subsegment()
             else:
-                statusCode = 400
+                status_code = 400
                 response_body = {
                     "message": "Invalid parameters",
-                    "errors": errors 
+                    "errors": errors
                 }
 
         except Exception as ex:
             LOGGER.error(ex)
-            statusCode = 500
+            status_code = 500
             response_body = {
                 "message": "Internal server error occurs"
             }
 
-        return self.response(statusCode, response_body)
+        return self.__response(status_code, response_body)

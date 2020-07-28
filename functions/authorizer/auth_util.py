@@ -5,15 +5,17 @@ from __future__ import print_function
 
 import re
 
+
 class HttpVerb:
-    GET     = "GET"
-    POST    = "POST"
-    PUT     = "PUT"
-    PATCH   = "PATCH"
-    HEAD    = "HEAD"
-    DELETE  = "DELETE"
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    PATCH = "PATCH"
+    HEAD = "HEAD"
+    DELETE = "DELETE"
     OPTIONS = "OPTIONS"
-    ALL     = "*"
+    ALL = "*"
+
 
 class AuthPolicy(object):
     awsAccountId = ""
@@ -69,13 +71,13 @@ class AuthPolicy(object):
 
         if effect.lower() == "allow":
             self.allowMethods.append({
-                'resourceArn' : resourceArn,
-                'conditions' : conditions
+                'resourceArn': resourceArn,
+                'conditions': conditions
             })
         elif effect.lower() == "deny":
             self.denyMethods.append({
-                'resourceArn' : resourceArn,
-                'conditions' : conditions
+                'resourceArn': resourceArn,
+                'conditions': conditions
             })
 
     def _getEmptyStatement(self, effect):
@@ -150,10 +152,10 @@ class AuthPolicy(object):
             raise NameError("No statements defined for the policy")
 
         policy = {
-            'principalId' : self.principalId,
-            'policyDocument' : {
-                'Version' : self.version,
-                'Statement' : []
+            'principalId': self.principalId,
+            'policyDocument': {
+                'Version': self.version,
+                'Statement': []
             }
         }
 

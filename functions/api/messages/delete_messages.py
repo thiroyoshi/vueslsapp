@@ -4,6 +4,7 @@
 from functions.common.framework import LambdaApiFramework
 from functions.repository.messages_repository import MessagesRepository
 
+
 class ApiHandler(LambdaApiFramework):
 
     def __init__(self):
@@ -14,22 +15,29 @@ class ApiHandler(LambdaApiFramework):
         result = MessagesRepository.delete_message_by_message_id(self.user_id, message_id)
         if result:
             statusCode = 200
-            body ={
+            body = {
                 "message": "success"
             }
         else:
             statusCode = 204
-            body ={
+            body = {
                 "message": "No content message_id: %s " % message_id
             }
         return statusCode, body
-        
+
 
 def lambda_handler(event, context):
     valid_rules = {
-        "body":{
-            "message_id" : {
-                "type" : "String"
+        "body": {
+            "message_id": {
+                "required": True,
+                "type": "String",
+                "rule": {
+                    "length": {
+                        "upper": 100,
+                        "lower": 1
+                    }
+                }
             }
         }
     }

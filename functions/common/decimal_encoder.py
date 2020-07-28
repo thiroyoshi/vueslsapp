@@ -2,6 +2,7 @@
 import json
 import decimal
 
+
 class DecimalEncoder(json.JSONEncoder):
     # pylintのバグ
     # https://github.com/PyCQA/pylint/issues/414

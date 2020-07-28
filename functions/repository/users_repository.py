@@ -6,9 +6,6 @@ import datetime
 import json
 import random
 import hashlib
-from decimal import Decimal
-from functions.common import initializer
-initializer.add_path()
 from pylibs import boto3
 from pylibs.boto3.dynamodb.conditions import Key
 from functions.common.decimal_encoder import DecimalEncoder
@@ -30,7 +27,7 @@ class UsersRepository():
             return None
 
         response = TABLE_OBJECT.get_item(
-            Key={'user_id' : user_id}
+            Key={'user_id': user_id}
         )
         item = response.get('Item')
 
@@ -75,7 +72,7 @@ class UsersRepository():
 
         now = datetime.datetime.now(datetime.timezone.utc)
         regist_at = now.strftime("%Y-%m-%dT%H:%M:%S%z")
-        
+
         try:
             response = TABLE_OBJECT.put_item(
                 Item={
@@ -106,7 +103,7 @@ class UsersRepository():
 
         now = datetime.datetime.now(datetime.timezone.utc)
         updated_at = now.strftime("%Y-%m-%dT%H:%M:%S%z")
-        
+
         updated_item['username'] = user_data.get('username')
         updated_item['email'] = user_data.get('email')
         updated_item['updated_at'] = updated_at

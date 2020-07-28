@@ -6,9 +6,6 @@ import datetime
 import json
 import random
 import hashlib
-from decimal import Decimal
-from functions.common import initializer
-initializer.add_path()
 from pylibs import boto3
 from pylibs.boto3.dynamodb.conditions import Key
 from functions.common.decimal_encoder import DecimalEncoder
@@ -112,7 +109,7 @@ class MessagesRepository():
 
         now = datetime.datetime.now(datetime.timezone.utc)
         updated_at = now.strftime("%Y-%m-%dT%H:%M:%S%z")
-        
+
         updated_item['message'] = message
         updated_item['updated_at'] = updated_at
 
@@ -124,7 +121,6 @@ class MessagesRepository():
             return None
 
         return True
-
 
     @staticmethod
     def delete_message_by_message_id(cognito_user_id, message_id):
@@ -148,19 +144,3 @@ class MessagesRepository():
             return None
 
         return True
-
-if __name__ == "__main__":
-    cognito_user_id = "aaaa"
-    message = "This is sample Message"
-    message_id = "0e2a192342fd4879ce9a457cca07754bdc94304452251eb2a84537078494b20f"
-    # print(json.dumps(MessagesRepository.post_message(cognito_user_id, message)))
-    
-    # print(json.dumps(MessagesRepository.get_message_by_user_id(cognito_user_id)))
-    print(json.dumps(MessagesRepository.get_message_by_message_id(cognito_user_id, message_id)))
-
-    message = "This is sample Messageeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-    print(json.dumps(MessagesRepository.put_message(cognito_user_id, message_id, message)))
-
-    print(json.dumps(MessagesRepository.get_message_by_message_id(cognito_user_id, message_id)))
-
-    # print(json.dumps(MessagesRepository.delete_message_by_message_id(cognito_user_id, message_id)))
