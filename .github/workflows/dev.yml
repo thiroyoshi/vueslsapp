@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        python-version: [3.7]
+        python-version: [3.8]
 
     steps:
     - name: Checkout repository
@@ -53,7 +53,9 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
     - name: Setup AWS CLI
-      uses: chrislennon/action-aws-cli@v1.1
+      uses: unfor19/install-aws-cli-action@v1
+      with:
+          version: 2
     - name: Remove Cache
       run: |
         json=`aws cloudfront list-distributions --query DistributionList.Items[]`
