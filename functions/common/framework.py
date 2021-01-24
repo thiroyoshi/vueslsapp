@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
 import json
 import logging
-from pylibs.aws_xray_sdk.core import xray_recorder
-from functions.repository.users_repository import UsersRepository
+import re
+from decimal import Decimal
+from traceback import format_exc
+from aws_xray_sdk.core import xray_recorder
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
@@ -21,11 +22,11 @@ class LambdaApiFramework(object):
         pass
 
     @xray_recorder.capture('Validate Boolean')
-    def __validate_bool(self, val):
+    def __validate_bool(self, key, val, param_type):
         error = []
 
-        if type(val) != bool:
-            error.append("Invalid type: %s must be Boolean, val: %s", val)
+        if val not in ["True", "False", "true", "false"]:
+            error.append("Invalid type: %s must be Bool, val: %s" % (key, val))
 
         return error
 
@@ -35,14 +36,9 @@ class LambdaApiFramework(object):
 
         try:
             str_val = str(val)
-        except Exception as ex:
-            LOGGER.error(ex)
+        except Exception:
             error.append("Invalid type: %s must be String, val: %s" % (key, val))
             return error
-
-        # if isinstance(str_val, str) is False:
-        #     error['type'] = "Invalid type: %s must be String" % val
-        #     return error
 
         if rule is not None:
             if 'length' in rule:
@@ -65,18 +61,13 @@ class LambdaApiFramework(object):
 
         try:
             int_val = int(val)
-        except Exception as ex:
-            LOGGER.error(ex)
+        except Exception:
             error.append("Invalid type: %s must be Int, val: %s" % (key, val))
             return error
 
-        # if isinstance(int_val, int) is False:
-        #     error['type'] = "Invalid type: %s must be Int" % val 
-        #     return error
-
         if rule is not None:
             if 'range' in rule:
-                LOGGER.info(json.dumps(rule['range']))
+                LOGGER.info(json.dumps(rule['range'], ensure_ascii=False))
                 if rule['range']['upper'] < int_val:
                     error.append("Invalid range: %s is more than %d, val: %d" % (key, rule['range']['upper'], int_val))
                 elif int_val < rule['range']['lower']:
@@ -90,14 +81,9 @@ class LambdaApiFramework(object):
 
         try:
             float_val = float(val)
-        except Exception as ex:
-            LOGGER.error(ex)
+        except Exception:
             error.append("Invalid type: %s must be Float, val: %s" % (key, val))
             return error
-
-        # if isinstance(val, float) is False:
-        #     error['type'] = "Invalid type: %s must be Float" % val
-        #     return error
 
         if rule is not None:
             if 'range' in rule:
@@ -109,26 +95,35 @@ class LambdaApiFramework(object):
         return error
 
     @xray_recorder.capture('Validate List')
-    def __validate_list(self, key, val, rule):
+    def __validate_list(self, key, val, rule, param_type):
         error = []
         if isinstance(val, list) is False:
             error.append("Invalid type: %s must be List" % key)
             return error
 
-        if rule is not None:
-            pass
+        if rule is None:
+            return error
+
+        element_validation = rule.get('elements')
+        if element_validation:
+            for item in val:
+                error.extend(self.__validate_data(item, element_validation, param_type))
 
         return error
 
     @xray_recorder.capture('Validate Dict')
-    def __validate_dict(self, key, val, rule):
+    def __validate_dict(self, key, val, rule, param_type):
         error = []
         if isinstance(val, dict) is False:
             error.append("Invalid type: %s must be Dict" % val)
             return error
 
-        if rule is not None:
-            pass
+        if rule is None:
+            return error
+
+        keys = rule.get('keys')
+        if keys:
+            error.extend(self.__validate_data(val, keys, param_type))
 
         return error
 
@@ -147,64 +142,25 @@ class LambdaApiFramework(object):
 
         if datas is None:
             for key in rules.keys():
-                required = rules.get(key).get('required')
-                if required is None:
-                    continue
-                if required is True:
+                rule = rules.get(key)
+                LOGGER.info("key: %s", key)
+                LOGGER.info(json.dumps(rule, ensure_ascii=False))
+
+                required = rule.get('required')
+                LOGGER.info(required)
+                if required is not None and required is True:
                     error.append("required parameter: %s is required" % key)
 
             if error:
-                LOGGER.info("validation failed.")
-                LOGGER.warning(json.dumps(error))
-            else:
-                LOGGER.info("validation skipped. No data is specified.")
-
-            return error
-
+                LOGGER.info('validation error : Data is not specified.')
+                LOGGER.warning(json.dumps(error, ensure_ascii=False))
+                errors.extend(error)
         else:
-            for key in rules.keys():
-                rule = rules.get(key)
-                LOGGER.info("key: %s", key)
-                LOGGER.info(json.dumps(rule))
-
-                val = datas.get(key)
-                if val is None:
-                    required = rule.get('required')
-                    if required is None:
-                        LOGGER.info('validation skipped. No data is specified: %s', key)
-                        continue
-                    if required is True:
-                        error.append("required parameter: %s is required" % key)
-
-                if not error:
-                    rule_type = rule.get('type')
-                    if rule_type:
-                        if rule_type == "Bool":
-                            error = self.__validate_bool(val)
-                        elif rule_type == "String":
-                            error = self.__validate_string(key, val, rule.get('rule'))
-                        elif rule_type == "Int":
-                            error = self.__validate_int(key, val, rule.get('rule'))
-                        elif rule_type == "Float":
-                            error = self.__validate_float(key, val, rule.get('rule'))
-                        elif rule_type == "List":
-                            error = self.__validate_list(key, val, rule.get('rule'))
-                        elif rule_type == "Dict":
-                            error = self.__validate_dict(key, val, rule.get('rule'))
-                    else:
-                        LOGGER.warning('type of rule is not set.')
-
-                if error:
-                    LOGGER.info('validation error : ( %s , %s )', key, val)
-                    LOGGER.warning(json.dumps(error))
-                    errors.extend(error)
-                    error = []
-                else:
-                    LOGGER.info('validation passed : ( %s , %s )', key, val)
+            errors.extend(self.__validate_data(datas, rules, param_type))
 
         if errors:
             LOGGER.info("validation failed.")
-            LOGGER.warning(json.dumps(errors))
+            LOGGER.warning(json.dumps(errors, ensure_ascii=False))
         else:
             LOGGER.info("all validation passed.")
 
@@ -232,6 +188,7 @@ class LambdaApiFramework(object):
 
             val = new_datas.get(key)
             if val is not None:
+                LOGGER.info("val is set : %s, %s", key, val)
                 continue
 
             default_val = rule.get('default')
@@ -243,6 +200,56 @@ class LambdaApiFramework(object):
 
         return new_datas
 
+    def __validate_data(self, datas, rules, param_type):
+        error = []
+        errors = []
+
+        for key in rules.keys():
+            rule = rules.get(key)
+            LOGGER.info("key: %s", key)
+            LOGGER.info(json.dumps(rule, ensure_ascii=False))
+
+            val = datas.get(key)
+            if val is None:
+                required = rule.get('required')
+                if required is True:
+                    error.append("required parameter: %s is required" % key)
+                else:
+                    LOGGER.info('validation skip: ( %s , %s )', key, val)
+                    continue
+
+            if not error:
+                rule_type = rule.get('type')
+                if rule_type:
+                    if rule_type == "Bool":
+                        error = self.__validate_bool(key, val, param_type)
+                    elif rule_type == "String":
+                        error = self.__validate_string(
+                            key, val, rule.get('rule'))
+                    elif rule_type == "Int":
+                        error = self.__validate_int(
+                            key, val, rule.get('rule'))
+                    elif rule_type == "Float":
+                        error = self.__validate_float(
+                            key, val, rule.get('rule'))
+                    elif rule_type == "List":
+                        error = self.__validate_list(
+                            key, val, rule.get('rule'), param_type)
+                    elif rule_type == "Dict":
+                        error = self.__validate_dict(key, val, rule, param_type)
+                else:
+                    LOGGER.warning('type of rule is not set.')
+
+            if error:
+                LOGGER.info('validation error : ( %s , %s )', key, val)
+                LOGGER.warning(json.dumps(error, ensure_ascii=False))
+                errors.extend(error)
+                error = []
+            else:
+                LOGGER.info('validation passed : ( %s , %s )', key, val)
+
+        return errors
+
     def controller(self, query_strings=None, body=None, path_params=None):
         LOGGER.warning("controller is not implemented.")
         return 200, {"message": "controller is not implemented."}
@@ -252,7 +259,7 @@ class LambdaApiFramework(object):
         if body is None:
             body = {"message": "default response"}
 
-        if status_code == 200 or status_code == 201:
+        if status_code in (200, 201):
             body["status"] = "success"
         else:
             body["status"] = "failure"
@@ -263,36 +270,45 @@ class LambdaApiFramework(object):
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Credentials': True,
             },
-            "body": json.dumps(body)
+            "body": json.dumps(body, ensure_ascii=False, default=self.__dump_unsupported_types)
         }
-        LOGGER.info(json.dumps(response))
+        LOGGER.info(json.dumps(response, ensure_ascii=False))
         return response
+
+    @xray_recorder.capture('Dump Unsupported Type')
+    def __dump_unsupported_types(self, obj):
+        if isinstance(obj, Decimal):
+            if int(obj) == obj:
+                return int(obj)
+            return float(obj)
+
+        try:
+            return str(obj)
+        except Exception:
+            return None
 
     @xray_recorder.capture('Handler')
     def handler(self, event, valid_rules=None):
 
-        LOGGER.info(json.dumps(event))
-
-        self.email = event.get('requestContext').get('authorizer').get('email')
-        self.cognito_user_id = event.get('requestContext').get('authorizer').get('cognito_user_id')
-
-        user_data = UsersRepository.get_user_by_cognito_user_id(self.cognito_user_id)
-        LOGGER.info(json.dumps(user_data))
-        if user_data is None:
-            _ = UsersRepository.post_user_by_cognito_user_id(self.cognito_user_id, self.cognito_user_id, self.email)
-        else:
-            self.user_id = user_data.get('user_id')
-
-        query_strings = None
-        body = None
-        path_params = None
-        if event['httpMethod'] == 'GET':
-            query_strings = event.get('queryStringParameters')
-        else:
-            body = json.loads(event.get('body'))
-            path_params = event.get('pathParameters')
+        LOGGER.info(json.dumps(event, ensure_ascii=False))
 
         try:
+            # Get user info from requestContext
+            self.email = event.get('requestContext').get('authorizer').get('email')
+            self.cognito_user_id = event.get('requestContext').get('authorizer').get('cognito_user_id')
+            self.user_id = self.cognito_user_id
+            # TODO: Must check user_id exists or not
+
+            # Get request parameters
+            query_strings = event.get('queryStringParameters')
+            path_params = event.get('pathParameters')
+            body_json = event.get('body')
+            if body_json is not None:
+                body = json.loads(body_json)
+            else:
+                body = None
+
+            # validate request parameters
             errors = []
             if valid_rules is not None:
                 rules = valid_rules.get('queryString')
@@ -322,6 +338,7 @@ class LambdaApiFramework(object):
                     if rules is not None or path_params is not None:
                         path_params = self.__set_defalut(path_params, valid_rules, 'pathParams')
 
+                # handle request
                 xray_recorder.begin_subsegment('Controller')
                 status_code, response_body = self.controller(query_strings, body, path_params)
                 xray_recorder.end_subsegment()
@@ -334,9 +351,8 @@ class LambdaApiFramework(object):
 
         except Exception as ex:
             LOGGER.error(ex)
+            LOGGER.error(format_exc())
             status_code = 500
-            response_body = {
-                "message": "Internal server error occurs"
-            }
+            response_body = {"message": "Internal server error occurs"}
 
         return self.__response(status_code, response_body)
