@@ -1,4 +1,6 @@
 # Vue + Serverless Framework App
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthiroyoshi%2Fvueslsapp.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthiroyoshi%2Fvueslsapp?ref=badge_shield)
+
 
 ## Description
 
@@ -139,3 +141,7 @@ This is the step of building the app at your local.
 - Serverless Framework : https://serverless.com/
 - AWS : https://aws.amazon.com/
 - AWS Custom Authorizer : https://dev.classmethod.jp/cloud/aws/verify_cognit_idtoken_by_apig_custom_auth/
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthiroyoshi%2Fvueslsapp.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthiroyoshi%2Fvueslsapp?ref=badge_large)
